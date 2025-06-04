@@ -362,17 +362,35 @@ For more details, please refer to the [Contribution Guidelines](docs/Contributio
 
 
 ```bibtex
-Coming soon
+@misc{lin2025uniworldhighresolutionsemanticencoders,
+      title={UniWorld: High-Resolution Semantic Encoders for Unified Visual Understanding and Generation}, 
+      author={Bin Lin and Zongjian Li and Xinhua Cheng and Yuwei Niu and Yang Ye and Xianyi He and Shenghai Yuan and Wangbo Yu and Shaodong Wang and Yunyang Ge and Yatian Pang and Li Yuan},
+      year={2025},
+      eprint={2506.03147},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2506.03147}, 
+}
 ```
 
-<!-- ```bibtex
+
+```bibtex
+@article{niu2025wise,
+  title={Wise: A world knowledge-informed semantic evaluation for text-to-image generation},
+  author={Niu, Yuwei and Ning, Munan and Zheng, Mengren and Lin, Bin and Jin, Peng and Liao, Jiaqi and Ning, Kunpeng and Zhu, Bin and Yuan, Li},
+  journal={arXiv preprint arXiv:2503.07265},
+  year={2025}
+}
+```
+
+```bibtex
 @article{lin2024open,
   title={Open-Sora Plan: Open-Source Large Video Generation Model},
   author={Lin, Bin and Ge, Yunyang and Cheng, Xinhua and Li, Zongjian and Zhu, Bin and Wang, Shaodong and He, Xianyi and Ye, Yang and Yuan, Shenghai and Chen, Liuhan and others},
   journal={arXiv preprint arXiv:2412.00131},
   year={2024}
 }
-``` -->
+```
 
 
 # 🤝 Community contributors
