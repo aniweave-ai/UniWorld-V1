@@ -16,7 +16,7 @@
 [![hf_paper](https://img.shields.io/badge/🤗-Paper%20In%20HF-red.svg)](https://huggingface.co/papers/2506.03147)
 [![model](https://img.shields.io/badge/🤗-Model-blue.svg)](https://huggingface.co/LanguageBind/UniWorld-V1)
 [![data](https://img.shields.io/badge/🤗-Dataset-blue.svg)](https://huggingface.co/datasets/LanguageBind/UniWorld-V1) 
-[![License](https://img.shields.io/badge/License-Apache-yellow)](https://github.com/PKU-YuanGroup/UniWorld/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](https://github.com/PKU-YuanGroup/UniWorld-V1/blob/main/LICENSE)
 [![Twitter](https://img.shields.io/badge/-Twitter@LinBin46984-black?logo=twitter&logoColor=1D9BF0)](https://x.com/LinBin46984/status/1929905024349679682) <br>
 [![demo0](https://img.shields.io/badge/🤗-Demo0-blue.svg)](http://8.130.165.159:8800/)
 [![demo0](https://img.shields.io/badge/🤗-Demo1-blue.svg)](http://8.130.165.159:8801/)
@@ -92,7 +92,7 @@ UniWorld, trained on only 2.7M samples, consistently outperforms [BAGEL](https:/
 
 - We curate 10+ CV downstream tasks, including canny, depth, sketch, MLSD,  segmentation and so on. 
 
-- We annotate 286K long-caption samples using [Qwen2-VL-72B](https://huggingface.co/Qwen/Qwen2-VL-72B-Instruct). We use GPT-4o to filter [ImgEdit](https://github.com/PKU-YuanGroup/ImgEdit), result in 724K high-quality editing samples (all shortedge ≥ 1024 pix). Additionally, we organize and filter existing open-sourced datasets. The details can be found [here](https://github.com/PKU-YuanGroup/UniWorld/tree/main?tab=readme-ov-file#data-details).
+- We annotate 286K long-caption samples using [Qwen2-VL-72B](https://huggingface.co/Qwen/Qwen2-VL-72B-Instruct). We use GPT-4o to filter [ImgEdit](https://github.com/PKU-YuanGroup/ImgEdit), result in 724K high-quality editing samples (all shortedge ≥ 1024 pix). Additionally, we organize and filter existing open-sourced datasets. The details can be found [here](https://github.com/PKU-YuanGroup/UniWorld-V1/tree/main?tab=readme-ov-file#data-details).
 
 ### 2. Contrastive Semantic Encoders as Reference Control Signals
 - Unlike prior approaches that use VAE-encoded reference images for low-level control, we advocate using contrastive visual encoders as control signals for reference images. 
@@ -142,10 +142,10 @@ Coming soon...
 
 # ⚙️ Requirements and Installation
 
-1. Clone this repository and navigate to UniWorld folder
+1. Clone this repository and navigate to UniWorld-V1 folder
 ```
-git clone https://github.com/PKU-YuanGroup/UniWorld
-cd UniWorld
+git clone https://github.com/PKU-YuanGroup/UniWorld-V1
+cd UniWorld-V1
 ```
 2. Install required packages
 
