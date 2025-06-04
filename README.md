@@ -51,12 +51,18 @@
 
 > [**ImgEdit: A Unified Image Editing Dataset and Benchmark**](https://arxiv.org/abs/2505.20275) <br>
 > Yang Ye and Xianyi He, etc. <br>
-[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/PKU-YuanGroup/ImgEdit)  [![github](https://img.shields.io/github/stars/PKU-YuanGroup/ImgEdit.svg?style=social)](https://github.com/PKU-YuanGroup/UniWorld-V1) [![arXiv](https://img.shields.io/badge/Arxiv-2412.00131-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2505.20275) <br>
+[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/PKU-YuanGroup/ImgEdit)  [![github](https://img.shields.io/github/stars/PKU-YuanGroup/ImgEdit.svg?style=social)](https://github.com/PKU-YuanGroup/ImgEdit) [![arXiv](https://img.shields.io/badge/Arxiv-2505.20275-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2505.20275) <br>
 
+
+> [**WISE: A World Knowledge-Informed Semantic Evaluation for Text-to-Image Generation**](https://arxiv.org/abs/2503.07265) <br>
+> Yuwei Niu, Munan Ning, etc. <br>
+[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/PKU-YuanGroup/WISE)  [![github](https://img.shields.io/github/stars/PKU-YuanGroup/WISE.svg?style=social)](https://github.com/PKU-YuanGroup/WISE) [![arXiv](https://img.shields.io/badge/Arxiv-2503.07265-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2503.07265) <br>
 
 > [**Open-Sora Plan: Open-Source Large Video Generation Model**](https://arxiv.org/abs/2412.00131) <br>
-> Bin Lin, Yunyang Ge and Xinhua Cheng etc. <br>
+> Bin Lin, Yunyang Ge and Xinhua Cheng, etc. <br>
 [![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/PKU-YuanGroup/Open-Sora-Plan)  [![github](https://img.shields.io/github/stars/PKU-YuanGroup/Open-Sora-Plan.svg?style=social)](https://github.com/PKU-YuanGroup/Open-Sora-Plan) [![arXiv](https://img.shields.io/badge/Arxiv-2412.00131-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2412.00131) <br>
+
+
 
 > </p ></details>
 
