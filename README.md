@@ -3,7 +3,7 @@
     <img src="https://s21.ax1x.com/2025/06/03/pVCBdw8.png" width="200"/>
 <p>
 <h2 align="center"> 
-  <a href="https://github.com/PKU-YuanGroup/UniWorld-V1/">
+  <a href="https://arxiv.org/abs/2506.03147">
     UniWorld: High-Resolution Semantic Encoders for <br> Unified Visual Understanding and Generation
   </a>
 </h2>
@@ -12,7 +12,8 @@
 
 <h5 align="left">
 
-[![arXiv](https://img.shields.io/badge/Arxiv-Report%20-b31b1b.svg?logo=arXiv)](https://github.com/user-attachments/files/20573816/report.pdf)
+[![arXiv](https://img.shields.io/badge/Arxiv-2506.03147-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2506.03147)
+[![hf_paper](https://img.shields.io/badge/🤗-Paper%20In%20HF-red.svg)](https://huggingface.co/papers/2506.03147)
 [![model](https://img.shields.io/badge/🤗-Model-blue.svg)](https://huggingface.co/LanguageBind/UniWorld-V1)
 [![data](https://img.shields.io/badge/🤗-Dataset-blue.svg)](https://huggingface.co/datasets/LanguageBind/UniWorld-V1) 
 [![License](https://img.shields.io/badge/License-Apache-yellow)](https://github.com/PKU-YuanGroup/UniWorld/blob/main/LICENSE)
@@ -40,8 +41,24 @@
 
 # 📣 News
 
-* **[2025.06.03]** 🤗 We release UniWorld, a unified framework for understanding, generation, and editing. All [data](https://huggingface.co/datasets/LanguageBind/UniWorld-V1), [models](https://huggingface.co/LanguageBind/UniWorld-V1), [training code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-training), and [evaluation code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-evaluation) are open-sourced. Checking our [report](https://github.com/user-attachments/files/20573816/report.pdf) for more details. Welcome to **watch** 👀 this repository for the latest updates.
+* **[2025.06.03]** 🤗 We release UniWorld, a unified framework for understanding, generation, and editing. All [data](https://huggingface.co/datasets/LanguageBind/UniWorld-V1), [models](https://huggingface.co/LanguageBind/UniWorld-V1), [training code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-training), and [evaluation code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-evaluation) are open-sourced. Checking our [report](https://arxiv.org/abs/2506.03147) for more details. Welcome to **watch** 👀 this repository for the latest updates.
 
+
+<br>
+
+<details open><summary>💡 We also have other image edit projects that may interest you ✨. </summary><p>
+<!--  may -->
+
+> [**ImgEdit: A Unified Image Editing Dataset and Benchmark**](https://arxiv.org/abs/2505.20275) <br>
+> Yang Ye and Xianyi He, etc. <br>
+[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/PKU-YuanGroup/ImgEdit)  [![github](https://img.shields.io/github/stars/PKU-YuanGroup/ImgEdit.svg?style=social)](https://github.com/PKU-YuanGroup/UniWorld-V1) [![arXiv](https://img.shields.io/badge/Arxiv-2412.00131-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2505.20275) <br>
+
+
+> [**Open-Sora Plan: Open-Source Large Video Generation Model**](https://arxiv.org/abs/2412.00131) <br>
+> Bin Lin, Yunyang Ge and Xinhua Cheng etc. <br>
+[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/PKU-YuanGroup/Open-Sora-Plan)  [![github](https://img.shields.io/github/stars/PKU-YuanGroup/Open-Sora-Plan.svg?style=social)](https://github.com/PKU-YuanGroup/Open-Sora-Plan) [![arXiv](https://img.shields.io/badge/Arxiv-2412.00131-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2412.00131) <br>
+
+> </p ></details>
 
 # 😍 Gallery
 
@@ -222,12 +239,21 @@ python scripts/make_univa_qwen2p5vl_weight.py \
     --save_path ${SAVE_PATH}
 ```
 
+#### Stage 1
+
+You need to specify `pretrained_lvlm_name_or_path` to ${SAVE_PATH} in `stage1.yaml`.
+
 ```
 # stage1
 bash scripts/denoiser/flux_qwen2p5vl_7b_vlm_stage1_512.sh
 ```
 
+
+#### Stage 2
+
 Download [flux-redux-siglipv2-512.bin](https://huggingface.co/LanguageBind/UniWorld-V1/resolve/main/flux-redux-siglipv2-512.bin?download=true) and set its path to `pretrained_siglip_mlp_path` in `stage2.yaml`. The weight is sourced from [ostris/Flex.1-alpha-Redux](https://huggingface.co/ostris/Flex.1-alpha-Redux), we just re-organize the weight.
+You also need to specify `pretrained_mlp2_path`, which is trained by stage 1.
+
 ```
 # stage2
 bash scripts/denoiser/flux_qwen2p5vl_7b_vlm_stage2_512.sh
