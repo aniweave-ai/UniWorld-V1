@@ -317,6 +317,8 @@ cd univa/eval/imgedit
 
 <details><summary>GEdit</summary><p>
 
+We discuss the scores related to GEdit-Bench [here](https://github.com/PKU-YuanGroup/UniWorld-V1/issues/6#issuecomment-2939392328).
+
 ```
 cd univa/eval/gdit
 # follow the instruction in univa/eval/gdit/README.md
