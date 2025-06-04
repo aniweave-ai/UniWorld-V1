@@ -9,9 +9,8 @@
 </h2>
 
 
-
-<h5 align="left">
-
+[![slack badge](https://img.shields.io/badge/Discord-join-blueviolet?logo=discord&amp)](https://discord.gg/YyMBeR4bfS)
+[![WeChat badge](https://img.shields.io/badge/微信-加入-green?logo=wechat&amp)](https://s21.ax1x.com/2025/06/04/pVPBxPg.jpg)<br>
 [![arXiv](https://img.shields.io/badge/Arxiv-2506.03147-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2506.03147)
 [![hf_paper](https://img.shields.io/badge/🤗-Paper%20In%20HF-red.svg)](https://huggingface.co/papers/2506.03147)
 [![model](https://img.shields.io/badge/🤗-Model-blue.svg)](https://huggingface.co/LanguageBind/UniWorld-V1)
@@ -35,7 +34,6 @@
 [![Pr](https://img.shields.io/github/issues-pr-closed-raw/PKU-YuanGroup/UniWorld-V1.svg?label=Merged+PRs&color=green)](https://github.com/PKU-YuanGroup/UniWorld-V1/pulls)
 [![GitHub issues](https://img.shields.io/github/issues/PKU-YuanGroup/UniWorld-V1?color=critical&label=Issues)](https://github.com/PKU-YuanGroup/UniWorld-V1/issues?q=is%3Aopen+is%3Aissue)
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/PKU-YuanGroup/UniWorld-V1?color=success&label=Issues)](https://github.com/PKU-YuanGroup/UniWorld-V1/issues?q=is%3Aissue+is%3Aclosed)
-</h5>
 
 
 
