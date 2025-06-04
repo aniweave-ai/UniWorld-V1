@@ -355,8 +355,7 @@ For more details, please refer to the [Contribution Guidelines](docs/Contributio
 
 ## ✨ Star History
 
-[![Star History](https://api.star-history.com/svg?repos=PKU-YuanGroup/UniWorld)](https://star-history.com/#PKU-YuanGroup/UniWorld&Date)
-
+[![Star History Chart](https://api.star-history.com/svg?repos=PKU-YuanGroup/UniWorld-V1&type=Date)](https://www.star-history.com/#PKU-YuanGroup/UniWorld-V1&Date)
 
 
 # ✏️ Citing
