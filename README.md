@@ -109,24 +109,24 @@ UniWorld, trained on only 2.7M samples, consistently outperforms [BAGEL](https:/
     <img src="https://s21.ax1x.com/2025/06/03/pVCB5Y4.jpg" width="850" style="margin-bottom: 0.2;"/>
 <p>
 
-# 🤗 Demo
+# 🔥 Quick Start
+1.Set up environment
 
-### Gradio Web UI
-
-Highly recommend trying out our web demo by the following command.
-
-```bash
-MODEL_PATH="path/to/model"
-FLUX_PATH="path/to/flux"
-SIGLIP_PATH="path/to/siglip"
-CUDA_VISIBLE_DEVICES=0 python -m univa.serve.gradio_web_server \
-    --model_path ${MODEL_PATH} \
-    --flux_path ${FLUX_PATH} \
-    --siglip_path ${SIGLIP_PATH}
 ```
-
-### CLI Inference
-
+git clone https://github.com/PKU-YuanGroup/UniWorld-V1
+cd UniWorld-V1
+conda create -n univa python=3.10 -y
+conda activate univa
+pip install -r requirements.txt
+pip install flash_attn --no-build-isolation
+```
+2.Download pretrained checkpoint
+```
+huggingface-cli download --resume-download LanguageBind/UniWorld-V1 --local-dir models/UniWorld-V1
+huggingface-cli download --resume-download black-forest-labs/FLUX.1-dev --local-dir models/FLUX.1-dev
+huggingface-cli download --resume-download google/siglip2-so400m-patch16-512 --local-dir models/siglip2-so400m-patch16-512
+```
+3.Run with cli
 ```bash
 MODEL_PATH="path/to/model"
 FLUX_PATH="path/to/flux"
@@ -136,25 +136,18 @@ CUDA_VISIBLE_DEVICES=1 python -m univa.serve.cli \
     --flux_path ${FLUX_PATH} \
     --siglip_path ${SIGLIP_PATH}
 ```
-
-### ComfyUI
+4.Run with gradio
+Highly recommend trying out our web demo by the following command.
+```bash
+python univa/serve/gradio_web_server.py --model_path models/UniWorld-V1 --flux_path models/FLUX.1-dev --siglip_path models/siglip2-so400m-patch16-512
+```
+For 24G VRAM GPU, you can run the following command:
+```bash
+python univa/serve/gradio_web_server.py --model_path models/UniWorld-V1 --flux_path models/FLUX.1-dev --siglip_path models/siglip2-so400m-patch16-512 --nf4
+```
+5.Run with ComfyUI
 
 Coming soon...
-
-# ⚙️ Requirements and Installation
-
-1. Clone this repository and navigate to UniWorld-V1 folder
-```
-git clone https://github.com/PKU-YuanGroup/UniWorld-V1
-cd UniWorld-V1
-```
-2. Install required packages
-
-```
-conda create -n univa python=3.10 -y
-conda activate univa
-pip install -r requirements.txt
-```
 
 # 🗝️ Training
 

@@ -1,17 +1,15 @@
 import gradio as gr
 import sys
 sys.path.append("..")
-from transformers import AutoTokenizer, AutoProcessor, set_seed
+from transformers import AutoProcessor, SiglipImageProcessor, SiglipVisionModel, T5EncoderModel, BitsAndBytesConfig
 from univa.models.qwen2p5vl.modeling_univa_qwen2p5vl import UnivaQwen2p5VLForConditionalGeneration
 from univa.utils.flux_pipeline import FluxPipeline
 from univa.utils.get_ocr import get_ocr_result
 from univa.utils.denoiser_prompt_embedding_flux import encode_prompt
 from qwen_vl_utils import process_vision_info
-from transformers import SiglipImageProcessor, SiglipVisionModel
 from univa.utils.anyres_util import dynamic_resize, concat_images_adaptive
 import torch
 from torch import nn
-from PIL import Image
 import os
 import uuid
 import base64
@@ -23,10 +21,13 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser(description="Model and component paths")
 
-    parser.add_argument("--model_path", type=str, required=True)
-    parser.add_argument("--flux_path", type=str, required=True)
-    parser.add_argument("--siglip_path", type=str, required=True)
-    parser.add_argument("--port", type=int, default=6812)
+    parser.add_argument("--model_path", type=str, default="LanguageBind/UniWorld-V1", help="UniWorld-V1模型路径")
+    parser.add_argument("--flux_path", type=str, default="black-forest-labs/FLUX.1-dev", help="FLUX.1-dev模型路径")
+    parser.add_argument("--siglip_path", type=str, default="google/siglip2-so400m-patch16-512", help="siglip2模型路径")
+    parser.add_argument("--server_name", type=str, default="127.0.0.1", help="IP地址")
+    parser.add_argument("--server_port", type=int, default=6812, help="端口号")
+    parser.add_argument("--share", action="store_true", help="是否公开分享")
+    parser.add_argument("--nf4", action="store_true", help="是否NF4量化")
 
     return parser.parse_args()
 
@@ -51,6 +52,7 @@ def add_plain_text_watermark(
 
     draw.text((x, y), text, font=font, fill=(255, 255, 255))
     return img
+
 
 css = """
 .table-wrap table tr td:nth-child(3) > div {
@@ -87,6 +89,7 @@ css = """
 }
 """
 
+
 def img2b64(image_path):
     with open(image_path, "rb") as f:
         b64 = base64.b64encode(f.read()).decode()
@@ -95,14 +98,22 @@ def img2b64(image_path):
 
 
 def initialize_models(args):
+    os.makedirs("tmp", exist_ok=True)
     # Paths
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    quantization_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_compute_dtype=torch.bfloat16,
+        bnb_4bit_quant_type="nf4",
+    )
+    
     # Load main model and task head
     model = UnivaQwen2p5VLForConditionalGeneration.from_pretrained(
         args.model_path,
         torch_dtype=torch.bfloat16,
         attn_implementation="flash_attention_2",
+        quantization_config=quantization_config if args.nf4 else None,
     ).to(device)
     task_head = nn.Sequential(
         nn.Linear(3584, 10240),
@@ -118,24 +129,35 @@ def initialize_models(args):
         min_pixels=448*448,
         max_pixels=448*448,
     )
-
-    # Load FLUX pipeline
-    pipe = FluxPipeline.from_pretrained(
-        args.flux_path,
-        transformer=model.denoise_tower.denoiser,
-        torch_dtype=torch.bfloat16,
-    ).to(device)
+    if args.nf4:
+        text_encoder_2 = T5EncoderModel.from_pretrained(
+            args.flux_path,
+            subfolder="text_encoder_2",
+            quantization_config=quantization_config,
+            torch_dtype=torch.bfloat16,
+        )
+        pipe = FluxPipeline.from_pretrained(
+            args.flux_path,
+            transformer=model.denoise_tower.denoiser,
+            text_encoder_2=text_encoder_2,
+            torch_dtype=torch.bfloat16,
+        ).to(device)
+    else:
+        pipe = FluxPipeline.from_pretrained(
+            args.flux_path,
+            transformer=model.denoise_tower.denoiser,
+            torch_dtype=torch.bfloat16,
+        ).to(device)
     tokenizers = [pipe.tokenizer, pipe.tokenizer_2]
     text_encoders = [pipe.text_encoder, pipe.text_encoder_2]
 
     # Optional SigLIP
     siglip_processor, siglip_model = None, None
-    if args.siglip_path:
-        siglip_processor = SiglipImageProcessor.from_pretrained(args.siglip_path)
-        siglip_model = SiglipVisionModel.from_pretrained(
-            args.siglip_path,
-            torch_dtype=torch.bfloat16,
-        ).to(device)
+    siglip_processor = SiglipImageProcessor.from_pretrained(args.siglip_path)
+    siglip_model = SiglipVisionModel.from_pretrained(
+        args.siglip_path,
+        torch_dtype=torch.bfloat16,
+    ).to(device)
 
     return {
         'model': model,
@@ -154,7 +176,6 @@ args = parse_args()
 state = initialize_models(args)
 
 
-
 def process_large_image(raw_img):
     if raw_img is None:
         return raw_img
@@ -167,7 +188,7 @@ def process_large_image(raw_img):
         new_h = int(img.height * scale)
         print(f'resize img {img.size} to {(new_w, new_h)}')
         img = img.resize((new_w, new_h), resample=Image.LANCZOS)
-        save_path = f"/tmp/{uuid.uuid4().hex}.png"
+        save_path = f"tmp/{uuid.uuid4().hex}.png"
         img.save(save_path)
         return save_path
     else:
@@ -282,7 +303,7 @@ def chat_step(image1, image2, text, height, width, steps, guidance,
                 ).images
             # img = [add_plain_text_watermark(im, 'Open-Sora Plan 2.0 Generated') for im in img]
             img = concat_images_adaptive(img)
-            save_path = f"/tmp/{uuid.uuid4().hex}.png"
+            save_path = f"tmp/{uuid.uuid4().hex}.png"
             img.save(save_path)
             convo.append({'role':'assistant','content':[{'type':'image','image':save_path}]})
             cur_genimg_i += 1
@@ -377,8 +398,8 @@ if __name__ == '__main__':
             """
             <div style="text-align:center;">
 
-            # 🎉 UniWorld-V1 Chat Interface 🎉
-            ### Unlock Cutting‑Edge Visual Perception, Feature Extraction, Editing, Synthesis, and Understanding
+            # 🎉 UniWorld-V1 Chat Interface 🎉
+            ### Unlock Cutting‑Edge Visual Perception, Feature Extraction, Editing, Synthesis, and Understanding
 
             **Usage Guide:**
 
@@ -502,8 +523,8 @@ if __name__ == '__main__':
         )
         state_ = gr.State({'conversation':[], 'history_image_paths':[], 'cur_ocr_i':0, 'cur_genimg_i':0})
         with gr.Row():
-            submit = gr.Button("Send")
-            clear = gr.Button("Clear History")
+            submit = gr.Button("Send", variant="primary")
+            clear = gr.Button("Clear History", variant="primary")
 
         progress_bar = gr.Progress()
         click_event = submit.click(
@@ -645,14 +666,14 @@ if __name__ == '__main__':
         )
     # ==============================================
 
-    server_name = os.getenv("SERVER_NAME", "0.0.0.0")
+if __name__ == "__main__": 
     demo.launch(
-        allowed_paths=["/"], 
-        server_name=server_name, 
-        server_port=args.port,
-        share=False, 
+        allowed_paths=["/"],
+        server_name=args.server_name, 
+        server_port=args.server_port,
+        share=args.share, 
+        inbrowser=True,
     )
-
 
 
 '''
