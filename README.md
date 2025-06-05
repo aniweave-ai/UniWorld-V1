@@ -10,7 +10,7 @@
 
 
 [![slack badge](https://img.shields.io/badge/Discord-join-blueviolet?logo=discord&amp)](https://discord.gg/YyMBeR4bfS)
-[![WeChat badge](https://img.shields.io/badge/微信-加入-green?logo=wechat&amp)](https://s21.ax1x.com/2025/06/04/pVPBxPg.jpg)<br>
+[![WeChat badge](https://img.shields.io/badge/微信-加入-green?logo=wechat&amp)](https://s21.ax1x.com/2025/06/05/pVPRubd.jpg)<br>
 [![arXiv](https://img.shields.io/badge/Arxiv-2506.03147-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2506.03147)
 [![hf_paper](https://img.shields.io/badge/🤗-Paper%20In%20HF-red.svg)](https://huggingface.co/papers/2506.03147)
 [![model](https://img.shields.io/badge/🤗-Model-blue.svg)](https://huggingface.co/LanguageBind/UniWorld-V1)
@@ -42,7 +42,7 @@
 * **[2025.06.03]** 🤗 We release UniWorld, a unified framework for understanding, generation, and editing. All [data](https://huggingface.co/datasets/LanguageBind/UniWorld-V1), [models](https://huggingface.co/LanguageBind/UniWorld-V1), [training code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-training), and [evaluation code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-evaluation) are open-sourced. Checking our [report](https://arxiv.org/abs/2506.03147) for more details. Welcome to **watch** 👀 this repository for the latest updates.
 
 <p align="center">
-    <img src="https://s21.ax1x.com/2025/06/04/pVPBxPg.jpg" width="200"/>
+    <img src="https://s21.ax1x.com/2025/06/05/pVPRubd.jpg" width="200"/>
 <p>
     
 <br>
@@ -122,16 +122,16 @@ pip install flash_attn --no-build-isolation
 ```
 2.Download pretrained checkpoint
 ```
-huggingface-cli download --resume-download LanguageBind/UniWorld-V1 --local-dir models/UniWorld-V1
-huggingface-cli download --resume-download black-forest-labs/FLUX.1-dev --local-dir models/FLUX.1-dev
-huggingface-cli download --resume-download google/siglip2-so400m-patch16-512 --local-dir models/siglip2-so400m-patch16-512
+huggingface-cli download --resume-download LanguageBind/UniWorld-V1 --local-dir ${MODEL_PATH}
+huggingface-cli download --resume-download black-forest-labs/FLUX.1-dev --local-dir ${FLUX_PATH}
+huggingface-cli download --resume-download google/siglip2-so400m-patch16-512 --local-dir ${SIGLIP_PATH}
 ```
 3.Run with cli
 ```bash
 MODEL_PATH="path/to/model"
 FLUX_PATH="path/to/flux"
 SIGLIP_PATH="path/to/siglip"
-CUDA_VISIBLE_DEVICES=1 python -m univa.serve.cli \
+CUDA_VISIBLE_DEVICES=0 python -m univa.serve.cli \
     --model_path ${MODEL_PATH} \
     --flux_path ${FLUX_PATH} \
     --siglip_path ${SIGLIP_PATH}
@@ -139,11 +139,11 @@ CUDA_VISIBLE_DEVICES=1 python -m univa.serve.cli \
 4.Run with gradio
 Highly recommend trying out our web demo by the following command.
 ```bash
-python univa/serve/gradio_web_server.py --model_path models/UniWorld-V1 --flux_path models/FLUX.1-dev --siglip_path models/siglip2-so400m-patch16-512
+python univa/serve/gradio_web_server.py --model_path ${MODEL_PATH} --flux_path ${FLUX_PATH} --siglip_path ${SIGLIP_PATH}
 ```
 For 24G VRAM GPU, you can run the following command:
 ```bash
-python univa/serve/gradio_web_server.py --model_path models/UniWorld-V1 --flux_path models/FLUX.1-dev --siglip_path models/siglip2-so400m-patch16-512 --nf4
+python univa/serve/gradio_web_server.py --model_path ${MODEL_PATH} --flux_path ${FLUX_PATH} --siglip_path ${SIGLIP_PATH} --nf4
 ```
 5.Run with ComfyUI
 
@@ -253,6 +253,9 @@ bash scripts/denoiser/flux_qwen2p5vl_7b_vlm_stage1_512.sh
 
 Download [flux-redux-siglipv2-512.bin](https://huggingface.co/LanguageBind/UniWorld-V1/resolve/main/flux-redux-siglipv2-512.bin?download=true) and set its path to `pretrained_siglip_mlp_path` in `stage2.yaml`. The weight is sourced from [ostris/Flex.1-alpha-Redux](https://huggingface.co/ostris/Flex.1-alpha-Redux), we just re-organize the weight.
 You also need to specify `pretrained_mlp2_path`, which is trained by stage 1.
+
+
+Download [google/siglip2-so400m-patch16-512](https://huggingface.co/google/siglip2-so400m-patch16-512) and set its path to `pretrained_siglip_name_or_path` in `stage2.yaml`.
 
 ```
 # stage2
