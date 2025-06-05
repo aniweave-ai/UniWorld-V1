@@ -356,7 +356,6 @@ For more details, please refer to the [Contribution Guidelines](docs/Contributio
 
 [![Star History Chart](https://api.star-history.com/svg?repos=PKU-YuanGroup/UniWorld-V1&type=Date)](https://www.star-history.com/#PKU-YuanGroup/UniWorld-V1&Date)
 
-
 # ✏️ Citing
 
 
@@ -370,19 +369,24 @@ For more details, please refer to the [Contribution Guidelines](docs/Contributio
       primaryClass={cs.CV},
       url={https://arxiv.org/abs/2506.03147}, 
 }
-```
-
-
-```bibtex
+@article{ye2025imgedit,
+  title={ImgEdit: A Unified Image Editing Dataset and Benchmark},
+  author={Ye, Yang and He, Xianyi and Li, Zongjian and Lin, Bin and Yuan, Shenghai and Yan, Zhiyuan and Hou, Bohan and Yuan, Li},
+  journal={arXiv preprint arXiv:2505.20275},
+  year={2025}
+}
 @article{niu2025wise,
   title={Wise: A world knowledge-informed semantic evaluation for text-to-image generation},
   author={Niu, Yuwei and Ning, Munan and Zheng, Mengren and Lin, Bin and Jin, Peng and Liao, Jiaqi and Ning, Kunpeng and Zhu, Bin and Yuan, Li},
   journal={arXiv preprint arXiv:2503.07265},
   year={2025}
 }
-```
-
-```bibtex
+@article{yan2025gpt,
+  title={Gpt-imgeval: A comprehensive benchmark for diagnosing gpt4o in image generation},
+  author={Yan, Zhiyuan and Ye, Junyan and Li, Weijia and Huang, Zilong and Yuan, Shenghai and He, Xiangyang and Lin, Kaiqing and He, Jun and He, Conghui and Yuan, Li},
+  journal={arXiv preprint arXiv:2504.02782},
+  year={2025}
+}
 @article{lin2024open,
   title={Open-Sora Plan: Open-Source Large Video Generation Model},
   author={Lin, Bin and Ge, Yunyang and Cheng, Xinhua and Li, Zongjian and Zhu, Bin and Wang, Shaodong and He, Xianyi and Ye, Yang and Yuan, Shenghai and Chen, Liuhan and others},
