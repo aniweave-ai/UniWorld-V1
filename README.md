@@ -10,7 +10,7 @@
 
 
 [![slack badge](https://img.shields.io/badge/Discord-join-blueviolet?logo=discord&amp)](https://discord.gg/YyMBeR4bfS)
-[![WeChat badge](https://img.shields.io/badge/微信-加入-green?logo=wechat&amp)](https://s21.ax1x.com/2025/06/04/pVPBxPg.jpg)<br>
+[![WeChat badge](https://img.shields.io/badge/微信-加入-green?logo=wechat&amp)](https://s21.ax1x.com/2025/06/05/pVPRubd.jpg)<br>
 [![arXiv](https://img.shields.io/badge/Arxiv-2506.03147-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2506.03147)
 [![hf_paper](https://img.shields.io/badge/🤗-Paper%20In%20HF-red.svg)](https://huggingface.co/papers/2506.03147)
 [![model](https://img.shields.io/badge/🤗-Model-blue.svg)](https://huggingface.co/LanguageBind/UniWorld-V1)
@@ -42,7 +42,7 @@
 * **[2025.06.03]** 🤗 We release UniWorld, a unified framework for understanding, generation, and editing. All [data](https://huggingface.co/datasets/LanguageBind/UniWorld-V1), [models](https://huggingface.co/LanguageBind/UniWorld-V1), [training code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-training), and [evaluation code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-evaluation) are open-sourced. Checking our [report](https://arxiv.org/abs/2506.03147) for more details. Welcome to **watch** 👀 this repository for the latest updates.
 
 <p align="center">
-    <img src="https://s21.ax1x.com/2025/06/04/pVPBxPg.jpg" width="200"/>
+    <img src="https://s21.ax1x.com/2025/06/05/pVPRubd.jpg" width="200"/>
 <p>
     
 <br>
@@ -114,6 +114,10 @@ UniWorld, trained on only 2.7M samples, consistently outperforms [BAGEL](https:/
 ### Gradio Web UI
 
 Highly recommend trying out our web demo by the following command.
+
+Download [LanguageBind/UniWorld-V1](https://huggingface.co/LanguageBind/UniWorld-V1) to `$MODEL_PATH`, or use your trained model path.
+Download [black-forest-labs/FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) to `$FLUX_PATH`.
+Download [google/siglip2-so400m-patch16-512](https://huggingface.co/google/siglip2-so400m-patch16-512) to `$SIGLIP_PATH`.
 
 ```bash
 MODEL_PATH="path/to/model"
@@ -260,6 +264,9 @@ bash scripts/denoiser/flux_qwen2p5vl_7b_vlm_stage1_512.sh
 
 Download [flux-redux-siglipv2-512.bin](https://huggingface.co/LanguageBind/UniWorld-V1/resolve/main/flux-redux-siglipv2-512.bin?download=true) and set its path to `pretrained_siglip_mlp_path` in `stage2.yaml`. The weight is sourced from [ostris/Flex.1-alpha-Redux](https://huggingface.co/ostris/Flex.1-alpha-Redux), we just re-organize the weight.
 You also need to specify `pretrained_mlp2_path`, which is trained by stage 1.
+
+
+Download [google/siglip2-so400m-patch16-512](https://huggingface.co/google/siglip2-so400m-patch16-512) and set its path to `pretrained_siglip_name_or_path` in `stage2.yaml`.
 
 ```
 # stage2
