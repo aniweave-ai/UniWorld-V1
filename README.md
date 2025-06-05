@@ -109,56 +109,45 @@ UniWorld, trained on only 2.7M samples, consistently outperforms [BAGEL](https:/
     <img src="https://s21.ax1x.com/2025/06/03/pVCB5Y4.jpg" width="850" style="margin-bottom: 0.2;"/>
 <p>
 
-# 🤗 Demo
+# 🔥 Quick Start
+1.Set up environment
 
-### Gradio Web UI
-
-Highly recommend trying out our web demo by the following command.
-
-Download [LanguageBind/UniWorld-V1](https://huggingface.co/LanguageBind/UniWorld-V1) to `$MODEL_PATH`, or use your trained model path.
-Download [black-forest-labs/FLUX.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) to `$FLUX_PATH`.
-Download [google/siglip2-so400m-patch16-512](https://huggingface.co/google/siglip2-so400m-patch16-512) to `$SIGLIP_PATH`.
-
-```bash
-MODEL_PATH="path/to/model"
-FLUX_PATH="path/to/flux"
-SIGLIP_PATH="path/to/siglip"
-CUDA_VISIBLE_DEVICES=0 python -m univa.serve.gradio_web_server \
-    --model_path ${MODEL_PATH} \
-    --flux_path ${FLUX_PATH} \
-    --siglip_path ${SIGLIP_PATH}
-```
-
-### CLI Inference
-
-```bash
-MODEL_PATH="path/to/model"
-FLUX_PATH="path/to/flux"
-SIGLIP_PATH="path/to/siglip"
-CUDA_VISIBLE_DEVICES=1 python -m univa.serve.cli \
-    --model_path ${MODEL_PATH} \
-    --flux_path ${FLUX_PATH} \
-    --siglip_path ${SIGLIP_PATH}
-```
-
-### ComfyUI
-
-Coming soon...
-
-# ⚙️ Requirements and Installation
-
-1. Clone this repository and navigate to UniWorld-V1 folder
 ```
 git clone https://github.com/PKU-YuanGroup/UniWorld-V1
 cd UniWorld-V1
-```
-2. Install required packages
-
-```
 conda create -n univa python=3.10 -y
 conda activate univa
 pip install -r requirements.txt
+pip install flash_attn --no-build-isolation
 ```
+2.Download pretrained checkpoint
+```
+huggingface-cli download --resume-download LanguageBind/UniWorld-V1 --local-dir ${MODEL_PATH}
+huggingface-cli download --resume-download black-forest-labs/FLUX.1-dev --local-dir ${FLUX_PATH}
+huggingface-cli download --resume-download google/siglip2-so400m-patch16-512 --local-dir ${SIGLIP_PATH}
+```
+3.Run with cli
+```bash
+MODEL_PATH="path/to/model"
+FLUX_PATH="path/to/flux"
+SIGLIP_PATH="path/to/siglip"
+CUDA_VISIBLE_DEVICES=0 python -m univa.serve.cli \
+    --model_path ${MODEL_PATH} \
+    --flux_path ${FLUX_PATH} \
+    --siglip_path ${SIGLIP_PATH}
+```
+4.Run with gradio
+Highly recommend trying out our web demo by the following command.
+```bash
+python univa/serve/gradio_web_server.py --model_path ${MODEL_PATH} --flux_path ${FLUX_PATH} --siglip_path ${SIGLIP_PATH}
+```
+For 24G VRAM GPU, you can run the following command:
+```bash
+python univa/serve/gradio_web_server.py --model_path ${MODEL_PATH} --flux_path ${FLUX_PATH} --siglip_path ${SIGLIP_PATH} --nf4
+```
+5.Run with ComfyUI
+
+Coming soon...
 
 # 🗝️ Training
 
