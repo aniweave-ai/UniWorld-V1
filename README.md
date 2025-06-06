@@ -106,6 +106,8 @@ UniWorld-V1 shows excellent performance in **20+** tasks.
     <img src="https://s21.ax1x.com/2025/06/03/pVCB5Y4.jpg" width="850" style="margin-bottom: 0.2;"/>
 <p>
 
+
+
 # 🔥 Quick Start
 1.Set up environment
 
@@ -351,12 +353,17 @@ For more details, please refer to the [Contribution Guidelines](docs/Contributio
 * [BAGEL](https://github.com/ByteDance-Seed/Bagel): An open‑source multimodal foundation model with 7B active parameters (14B total) trained on large‑scale interleaved multimodal data.
 
 
+# 🧐 FAQ
+
+1. **Visual Encoder:** https://github.com/PKU-YuanGroup/UniWorld-V1/issues/5 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/15 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/18
+2. **Data Setup:** https://github.com/PKU-YuanGroup/UniWorld-V1/issues/17
+3. **Editing Evaluation:** https://github.com/PKU-YuanGroup/UniWorld-V1/issues/6 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/16
+3. **Training Process and Analysis:** https://github.com/PKU-YuanGroup/UniWorld-V1/issues/3 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/9 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/14
+
+
+   
 # 🔒 License
 * See [LICENSE](LICENSE) for details. The FLUX weights fall under the [FLUX.1 [dev] Non-Commercial License](https://huggingface.co/black-forest-labs/FLUX.1-dev/blob/main/LICENSE.md).
-
-## ✨ Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=PKU-YuanGroup/UniWorld-V1&type=Date)](https://www.star-history.com/#PKU-YuanGroup/UniWorld-V1&Date)
 
 # ✏️ Citing
 
@@ -400,4 +407,8 @@ For more details, please refer to the [Contribution Guidelines](docs/Contributio
 <a href="https://github.com/PKU-YuanGroup/UniWorld-V1/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=PKU-YuanGroup/UniWorld-V1" />
 </a>
+
+# ✨ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=PKU-YuanGroup/UniWorld-V1&type=Date)](https://www.star-history.com/#PKU-YuanGroup/UniWorld-V1&Date)
 
