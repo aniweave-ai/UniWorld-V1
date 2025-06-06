@@ -242,10 +242,11 @@ python scripts/make_univa_qwen2p5vl_weight.py \
 
 You need to specify `pretrained_lvlm_name_or_path` to `${SAVE_PATH}` in `stage1.yaml`.
 
-We recommend using `optimizer: prodigy` with `learning_rate: 1.0' in `stage1.yaml`.
+We recommend using `optimizer: prodigy` with `learning_rate: 1.0` in `stage1.yaml`.
 
 ```
 # stage1
+# if use prodigy, pip install prodigy
 bash scripts/denoiser/flux_qwen2p5vl_7b_vlm_stage1_512.sh
 ```
 
