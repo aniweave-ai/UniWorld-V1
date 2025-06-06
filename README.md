@@ -1,16 +1,15 @@
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/e187584a-f096-44df-b26b-f85aae838a18" width="200"/>
+    <img src="https://s21.ax1x.com/2025/06/03/pVCBdw8.png" width="200"/>
 <p>
 <h2 align="center"> 
   <a href="https://arxiv.org/abs/2506.03147">
-    UniWorld-V1: High-Resolution Semantic Encoders for <br> Unified Visual Understanding and Generation
+    UniWorld: High-Resolution Semantic Encoders for <br> Unified Visual Understanding and Generation
   </a>
 </h2>
 
-
 [![slack badge](https://img.shields.io/badge/Discord-join-blueviolet?logo=discord&amp)](https://discord.gg/YyMBeR4bfS)
-[![WeChat badge](https://img.shields.io/badge/微信-加入-green?logo=wechat&amp)](https://s21.ax1x.com/2025/06/05/pVPoZFJ.jpg)<br>
+[![WeChat badge](https://img.shields.io/badge/微信-加入-green?logo=wechat&amp)](https://github.com/user-attachments/assets/e187584a-f096-44df-b26b-f85aae838a18)<br>
 [![arXiv](https://img.shields.io/badge/Arxiv-2506.03147-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2506.03147)
 [![hf_paper](https://img.shields.io/badge/🤗-Paper%20In%20HF-red.svg)](https://huggingface.co/papers/2506.03147)
 [![model](https://img.shields.io/badge/🤗-Model-blue.svg)](https://huggingface.co/LanguageBind/UniWorld-V1)
