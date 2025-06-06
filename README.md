@@ -69,9 +69,7 @@
 
 # 😍 Gallery
 
-UniWorld shows excellent performance in **20+** tasks. 
-
-UniWorld, trained on only 2.7M samples, consistently outperforms [BAGEL](https://github.com/ByteDance-Seed/Bagel) on the ImgEdit-Bench for image manipulation. It also surpasses the specialized image editing model [Step1X-Edit](https://github.com/stepfun-ai/Step1X-Edit) across multiple dimensions, including add, adjust, and extract on ImgEdit-Bench. 
+UniWorld shows excellent performance in **20+** tasks.
 
 **Click to play**
 
