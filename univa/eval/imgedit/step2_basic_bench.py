@@ -37,7 +37,7 @@ def call_gpt(original_image_path, result_image_path, edit_prompt, edit_type, pro
         full_prompt = prompt.replace('<edit_prompt>', edit_prompt)
 
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4o-0806",
             stream=False,
             messages=[{
                 "role": "user",
