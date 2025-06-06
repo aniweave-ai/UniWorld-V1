@@ -1,10 +1,10 @@
 
 <p align="center">
-    <img src="https://s21.ax1x.com/2025/06/03/pVCBdw8.png" width="200"/>
+    <img src="https://github.com/user-attachments/assets/e187584a-f096-44df-b26b-f85aae838a18" width="200"/>
 <p>
 <h2 align="center"> 
   <a href="https://arxiv.org/abs/2506.03147">
-    UniWorld: High-Resolution Semantic Encoders for <br> Unified Visual Understanding and Generation
+    UniWorld-V1: High-Resolution Semantic Encoders for <br> Unified Visual Understanding and Generation
   </a>
 </h2>
 
@@ -39,7 +39,7 @@
 
 # 📣 News
 
-* **[2025.06.03]** 🤗 We release UniWorld, a unified framework for understanding, generation, and editing. All [data](https://huggingface.co/datasets/LanguageBind/UniWorld-V1), [models](https://huggingface.co/LanguageBind/UniWorld-V1), [training code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-training), and [evaluation code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-evaluation) are open-sourced. Checking our [report](https://arxiv.org/abs/2506.03147) for more details. Welcome to **watch** 👀 this repository for the latest updates.
+* **[2025.06.03]** 🤗 We release UniWorld-V1, a unified framework for understanding, generation, and editing. All [data](https://huggingface.co/datasets/LanguageBind/UniWorld-V1), [models](https://huggingface.co/LanguageBind/UniWorld-V1), [training code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-training), and [evaluation code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-evaluation) are open-sourced. Checking our [report](https://arxiv.org/abs/2506.03147) for more details. Welcome to **watch** 👀 this repository for the latest updates.
 
 <p align="center">
     <img src="https://github.com/user-attachments/assets/e187584a-f096-44df-b26b-f85aae838a18" width="200"/>
@@ -69,7 +69,7 @@
 
 # 😍 Gallery
 
-UniWorld shows excellent performance in **20+** tasks.
+UniWorld-V1 shows excellent performance in **20+** tasks.
 
 **Click to play**
 
@@ -137,12 +137,14 @@ CUDA_VISIBLE_DEVICES=0 python -m univa.serve.cli \
 4.Run with gradio
 Highly recommend trying out our web demo by the following command.
 ```bash
-python univa/serve/gradio_web_server.py --model_path ${MODEL_PATH} --flux_path ${FLUX_PATH} --siglip_path ${SIGLIP_PATH}
+python univa.serve.gradio_web_server.py --model_path ${MODEL_PATH} --flux_path ${FLUX_PATH} --siglip_path ${SIGLIP_PATH}
 ```
-For 24G VRAM GPU, you can run the following command:
+
+For 24G VRAM GPU, download [wikeeyang/UniWorld-V1-NF4](https://huggingface.co/wikeeyang/UniWorld-V1-NF4) to ${MODEL_PATH}, Thank you [@gluttony-10](https://github.com/gluttony-10) very much for contribution! Then you can run the following command:
 ```bash
-python univa/serve/gradio_web_server.py --model_path ${MODEL_PATH} --flux_path ${FLUX_PATH} --siglip_path ${SIGLIP_PATH} --nf4
+python univa.serve.gradio_web_server.py --model_path ${MODEL_PATH} --flux_path ${FLUX_PATH} --siglip_path ${SIGLIP_PATH} --nf4
 ```
+
 5.Run with ComfyUI
 
 Coming soon...
@@ -331,7 +333,7 @@ cd univa/eval/gdit
 
 
 # 💡 How to Contribute
-We greatly appreciate your contributions to the UniWorld open-source community and helping us make it even better than it is now!
+We greatly appreciate your contributions to the UniWorld-V1 open-source community and helping us make it even better than it is now!
 
 For more details, please refer to the [Contribution Guidelines](docs/Contribution_Guidelines.md).
 
@@ -358,14 +360,11 @@ For more details, please refer to the [Contribution Guidelines](docs/Contributio
 
 
 ```bibtex
-@misc{lin2025uniworldhighresolutionsemanticencoders,
-      title={UniWorld: High-Resolution Semantic Encoders for Unified Visual Understanding and Generation}, 
-      author={Bin Lin and Zongjian Li and Xinhua Cheng and Yuwei Niu and Yang Ye and Xianyi He and Shenghai Yuan and Wangbo Yu and Shaodong Wang and Yunyang Ge and Yatian Pang and Li Yuan},
-      year={2025},
-      eprint={2506.03147},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2506.03147}, 
+@article{lin2025uniworld,
+  title={UniWorld: High-Resolution Semantic Encoders for Unified Visual Understanding and Generation},
+  author={Lin, Bin and Li, Zongjian and Cheng, Xinhua and Niu, Yuwei and Ye, Yang and He, Xianyi and Yuan, Shenghai and Yu, Wangbo and Wang, Shaodong and Ge, Yunyang and others},
+  journal={arXiv preprint arXiv:2506.03147},
+  year={2025}
 }
 @article{ye2025imgedit,
   title={ImgEdit: A Unified Image Editing Dataset and Benchmark},
