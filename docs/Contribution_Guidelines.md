@@ -1,23 +1,23 @@
-# Contributing to the UniWorld Community
+# Contributing to the UniWorld-V1 Community
 
-The UniWorld open-source community is a collaborative initiative driven by the community, emphasizing a commitment to being free and void of exploitation. Organized spontaneously by community members, we invite you to contribute to the UniWorld open-source community and help elevate it to new heights!
+The UniWorld-V1 open-source community is a collaborative initiative driven by the community, emphasizing a commitment to being free and void of exploitation. Organized spontaneously by community members, we invite you to contribute to the UniWorld-V1 open-source community and help elevate it to new heights!
 
 ## Submitting a Pull Request (PR)
 
 As a contributor, before submitting your request, kindly follow these guidelines:
 
-1. Start by checking the [UniWorld GitHub](https://github.com/PKU-YuanGroup/UniWorld/pulls) to see if there are any open or closed pull requests related to your intended submission. Avoid duplicating existing work.
+1. Start by checking the [UniWorld-V1 GitHub](https://github.com/PKU-YuanGroup/UniWorld-V1/pulls) to see if there are any open or closed pull requests related to your intended submission. Avoid duplicating existing work.
 
-2. [Fork](https://github.com/PKU-YuanGroup/UniWorld/fork) the [UniWorld](https://github.com/PKU-YuanGroup/UniWorld) repository and download your forked repository to your local machine.
+2. [Fork](https://github.com/PKU-YuanGroup/UniWorld-V1/fork) the [UniWorld-V1](https://github.com/PKU-YuanGroup/UniWorld-V1) repository and download your forked repository to your local machine.
 
    ```bash
    git clone [your-forked-repository-url]
    ```
 
-3. Add the original UniWorld repository as a remote to sync with the latest updates:
+3. Add the original UniWorld-V1 repository as a remote to sync with the latest updates:
 
    ```bash
-   git remote add upstream https://github.com/PKU-YuanGroup/UniWorld
+   git remote add upstream https://github.com/PKU-YuanGroup/UniWorld-V1
    ```
 
 4. Sync the code from the main repository to your local machine, and then push it back to your forked remote repository.
@@ -57,7 +57,7 @@ As a contributor, before submitting your request, kindly follow these guidelines
    git push origin my-docs-branch
    ```
 
-8. Submit a pull request to `UniWorld:main` on the GitHub repository page.
+8. Submit a pull request to `UniWorld-V1:main` on the GitHub repository page.
 
 ## Commit Message Format
 
