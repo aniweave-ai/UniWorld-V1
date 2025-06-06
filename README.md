@@ -42,7 +42,7 @@
 * **[2025.06.03]** 🤗 We release UniWorld, a unified framework for understanding, generation, and editing. All [data](https://huggingface.co/datasets/LanguageBind/UniWorld-V1), [models](https://huggingface.co/LanguageBind/UniWorld-V1), [training code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-training), and [evaluation code](https://github.com/PKU-YuanGroup/UniWorld-V1?tab=readme-ov-file#%EF%B8%8F-evaluation) are open-sourced. Checking our [report](https://arxiv.org/abs/2506.03147) for more details. Welcome to **watch** 👀 this repository for the latest updates.
 
 <p align="center">
-    <img src="https://s21.ax1x.com/2025/06/05/pVPoZFJ.jpg" width="200"/>
+    <img src="https://github.com/user-attachments/assets/e187584a-f096-44df-b26b-f85aae838a18" width="200"/>
 <p>
     
 <br>
