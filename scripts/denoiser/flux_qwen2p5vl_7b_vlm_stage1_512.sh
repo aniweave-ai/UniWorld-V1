@@ -22,6 +22,7 @@ NUM_PROCESSES=$((8 * WORLD_SIZE))
 # NEED MODIFY in YAML:
   # data_txt
   # pretrained_lvlm_name_or_path
+  # ema_pretrained_lvlm_name_or_path: same with pretrained_lvlm_name_or_path when the first training
   # pretrained_denoiser_name_or_path
 accelerate launch \
   --config_file scripts/accelerate_configs/ddp_config.yaml \
