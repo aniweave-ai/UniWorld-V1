@@ -189,7 +189,7 @@ python univa/serve/check_data.py
 
 <details><summary>Image Editing</summary><p>
     
-- [imgedit-724k](https://huggingface.co/datasets/sysuyy/ImgEdit/tree/main): Data is filtered using GPT-4o, retaining approximately half. [2.1T storage usage.]
+- [imgedit-724k](https://huggingface.co/datasets/sysuyy/ImgEdit/tree/main): Data is filtered using GPT-4o, retaining approximately half. [2.8T storage usage.]
 - [OmniEdit-368k](https://huggingface.co/datasets/TIGER-Lab/OmniEdit-Filtered-1.2M): For image editing data, samples with edited regions smaller than 1/100 were filtered out; images have a short side ≥ 1024 pixels. [204 GB storage usage.]
 - [SEED-Data-Edit-Part1-Openimages-65k](https://huggingface.co/datasets/AILab-CVC/SEED-Data-Edit-Part1-Openimages): For image editing data, samples with edited regions smaller than 1/100 were filtered out. Images have a short side ≥ 1024 pixels. [10 GB storage usage.]
 - [SEED-Data-Edit-Part2-3-12k](https://huggingface.co/datasets/AILab-CVC/SEED-Data-Edit-Part2-3): For image editing data, samples with edited regions smaller than 1/100 were filtered out. Images have a short side ≥ 1024 pixels. [10 GB storage usage.]
