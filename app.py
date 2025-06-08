@@ -64,7 +64,6 @@ css = """
     white-space: pre-wrap;   /* 自动换行 */
     word-break: break-all;   /* 长单词内部分行 */
 }
-
 .table-wrap table tr td:nth-child(2) > div {
     max-width: 150px;
     white-space: pre-wrap;
@@ -77,7 +76,6 @@ css = """
     word-break: keep-all;
     overflow-x: auto;
 }
-
 .table-wrap table tr td:nth-last-child(-n+8) > div {
     max-width: 130px;
     white-space: pre-wrap;
@@ -110,7 +108,7 @@ def initialize_models(args):
         bnb_4bit_compute_dtype=torch.bfloat16,
         bnb_4bit_quant_type="nf4",
     )
-    
+
     # Load main model and task head
     model = UnivaQwen2p5VLForConditionalGeneration.from_pretrained(
         args.model_path,
@@ -179,7 +177,7 @@ def initialize_models(args):
 
 
 args = parse_args()
-state = initialize_models(args)
+# state = initialize_models(args)
 
 
 def process_large_image(raw_img):
@@ -204,7 +202,7 @@ def process_large_image(raw_img):
 def chat_step(image1, image2, text, height, width, steps, guidance,
               ocr_enhancer, joint_with_t5, enhance_generation, enhance_understanding,
               seed, num_imgs, history_state, progress=gr.Progress()):
-    
+
     try:
         convo = history_state['conversation']
         image_paths = history_state['history_image_paths']
@@ -324,7 +322,7 @@ def chat_step(image1, image2, text, height, width, steps, guidance,
             convo.append({'role':'assistant','content':[{'type':'text','text':out}]})
             bot_msg = (None, out)
 
-        
+
         chat_pairs = []
         # print(convo)
         # print()
@@ -407,14 +405,13 @@ if __name__ == '__main__':
         gr.Markdown(
             """
             <div style="text-align:center;">
-
+            
             # 🎉 UniWorld-V1 Chat Interface 🎉
+
             ### Unlock Cutting‑Edge Visual Perception, Feature Extraction, Editing, Synthesis, and Understanding
 
             **Usage Guide:**
-
             - It is recommended to perform inference on four images concurrently to offer varied selections.
-
             - Uploaded images are automatically resized; manually specifying resolutions that differ substantially from the original is not advised.
             </div>
             """,
@@ -436,7 +433,7 @@ if __name__ == '__main__':
                 seed = gr.Textbox(label="Seed (-1 for random)", value="-1")
                 seed_holder = gr.Textbox(visible=False)
                 with gr.Row():
-                    num_imgs = gr.Slider(1, 4, 4, step=2, label="Num Images")
+                    num_imgs = gr.Slider(1, 4, 4, step=1, label="Num Images")
                 with gr.Row():
                     height = gr.Slider(256, 2048, 1024, step=64, label="Height")
                     width = gr.Slider(256, 2048, 1024, step=64, label="Width")
@@ -662,7 +659,7 @@ if __name__ == '__main__':
                 ["assets/depth_image.jpg", None,
                 "Estimate depth with a focus on background structure.",
                 example_height, example_width, 30, 4.0, False, False, False, False, "-1", 4],
-                
+
                 # image-to-image (reconstruction)
                 ["assets/rec.jpg", None,
                 "Simply reconstruct the original image with no enhancements.",
@@ -732,18 +729,18 @@ def apply_localization(block):
     def process_component(component):
         if not component:
             return
-        
+
         for attr in ['label', 'info', 'placeholder']:
             if hasattr(component, attr):
                 text = getattr(component, attr)
                 if text in UI_TRANSLATIONS:
                     setattr(component, attr, UI_TRANSLATIONS[text])
-        
+
         if hasattr(component, 'value'):
             value = component.value
             if isinstance(value, str) and value in UI_TRANSLATIONS: 
                 component.value = UI_TRANSLATIONS[value]
-        
+
         if isinstance(component, gr.Markdown):
             for en, zh in UI_TRANSLATIONS.items():
                 component.value = component.value.replace(en, zh)
@@ -751,7 +748,7 @@ def apply_localization(block):
         if hasattr(component, 'children'):
             for child in component.children:
                 process_component(child)
-    
+
     process_component(block)
     return block
 
@@ -770,13 +767,11 @@ if __name__ == "__main__":
 
 
 '''
-
 MODEL_PATH="/mnt/data/lb/Remake/FlowWorld/checkpoints/flux_qwen2p5vl_7b_vlm_mlp_siglip_stage2_ts_1024_bs42x8x1_fa_any_11ratio_ema999_ocr_adamw_t5_0p4_lr1e-5_mask_refstyle_extract_resume_run3/checkpoint-12000/model_ema"
 FLUX_PATH="/mnt/data/checkpoints/black-forest-labs/FLUX.1-dev"
 SIGLIP_PATH="/mnt/data/checkpoints/google/siglip2-so400m-patch16-512"
-CUDA_VISIBLE_DEVICES=2 python -m app \
+CUDA_VISIBLE_DEVICES=2 python app.py \
     --model_path ${MODEL_PATH} \
     --flux_path ${FLUX_PATH} \
     --siglip_path ${SIGLIP_PATH}
-
 '''
