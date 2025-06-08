@@ -52,7 +52,7 @@ dataset_config:
   dataset_type: qwen2p5vl
   min_pixels: 200704
   max_pixels: 200704
-  data_txt: /mnt/data/lb/Remake/UniWorld//data.txt
+  data_txt: /mnt/data/lb/Remake/UniWorld/data.txt
   batch_size: 1
   num_workers: 16
   height: 512
