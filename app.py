@@ -177,7 +177,7 @@ def initialize_models(args):
 
 
 args = parse_args()
-# state = initialize_models(args)
+state = initialize_models(args)
 
 
 def process_large_image(raw_img):
