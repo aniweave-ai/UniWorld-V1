@@ -436,7 +436,7 @@ if __name__ == '__main__':
                 seed = gr.Textbox(label="Seed (-1 for random)", value="-1")
                 seed_holder = gr.Textbox(visible=False)
                 with gr.Row():
-                    num_imgs = gr.Slider(1, 4, 4, step=1, label="Num Images")
+                    num_imgs = gr.Slider(1, 4, 4, step=2, label="Num Images")
                 with gr.Row():
                     height = gr.Slider(256, 2048, 1024, step=64, label="Height")
                     width = gr.Slider(256, 2048, 1024, step=64, label="Width")
@@ -449,7 +449,7 @@ if __name__ == '__main__':
                         enhance_und_box = gr.Checkbox(value=False, label="Enhance Understanding")
                     with gr.Row():
                         ocr_box = gr.Checkbox(value=False, label="Enhance Text Rendering")
-                        t5_box = gr.Checkbox(value=False, label="Enhance Current Turn")
+                        t5_box = gr.Checkbox(value=True, label="Enhance Current Turn")
         with gr.Row():
             submit = gr.Button("Send", variant="primary")
             clear = gr.Button("Clear History", variant="primary")
