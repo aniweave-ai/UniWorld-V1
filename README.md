@@ -249,12 +249,16 @@ python scripts/make_univa_qwen2p5vl_weight.py \
 
 #### Stage 1
 
-You need to specify `pretrained_lvlm_name_or_path` to `${SAVE_PATH}` in `stage1.yaml`.
+You need to specify `pretrained_lvlm_name_or_path` to `${SAVE_PATH}` in `flux_qwen2p5vl_7b_vlm_stage1_512.yaml`.
 
-We recommend using `optimizer: prodigy` with `learning_rate: 1.0` in `stage1.yaml`.
+We recommend using `optimizer: prodigy` with `learning_rate: 1.0` in `flux_qwen2p5vl_7b_vlm_stage1_512.yaml`.
+
+For training with 512×512 scale images (batch size 1), it consume about 74G in 1 node (8 GPUs).
+
+Setting `ema_pretrained_lvlm_name_or_path: null` can saving memory if you want to train the higher resolution (e.g, 1024×1024 scale) or larger batch size.
 
 ```
-# stage1
+# stage 1
 # if use prodigy, pip install prodigy
 bash scripts/denoiser/flux_qwen2p5vl_7b_vlm_stage1_512.sh
 ```
@@ -262,16 +266,22 @@ bash scripts/denoiser/flux_qwen2p5vl_7b_vlm_stage1_512.sh
 
 #### Stage 2
 
-Download [flux-redux-siglipv2-512.bin](https://huggingface.co/LanguageBind/UniWorld-V1/resolve/main/flux-redux-siglipv2-512.bin?download=true) and set its path to `pretrained_siglip_mlp_path` in `stage2.yaml`. The weight is sourced from [ostris/Flex.1-alpha-Redux](https://huggingface.co/ostris/Flex.1-alpha-Redux), we just re-organize the weight.
+Download [flux-redux-siglipv2-512.bin](https://huggingface.co/LanguageBind/UniWorld-V1/resolve/main/flux-redux-siglipv2-512.bin?download=true) and set its path to `pretrained_siglip_mlp_path` in `flux_qwen2p5vl_7b_vlm_stage2_512.yaml`. The weight is sourced from [ostris/Flex.1-alpha-Redux](https://huggingface.co/ostris/Flex.1-alpha-Redux), we just re-organize the weight.
+
+Download [google/siglip2-so400m-patch16-512](https://huggingface.co/google/siglip2-so400m-patch16-512) and set its path to `pretrained_siglip_name_or_path` in `flux_qwen2p5vl_7b_vlm_stage2_512.yaml`.
+
 You also need to specify `pretrained_mlp2_path`, which is trained by stage 1.
+ 
+For training with 512×512 scale images (batch size 1), it consume about **78G** in 1 node (8 GPUs). 
 
-
-Download [google/siglip2-so400m-patch16-512](https://huggingface.co/google/siglip2-so400m-patch16-512) and set its path to `pretrained_siglip_name_or_path` in `stage2.yaml`.
+Setting `ema_pretrained_lvlm_name_or_path: null` can saving memory if you want to train the higher resolution (e.g, 1024×1024 scale) or larger batch size. Using more nodes also can save memory because we use zero2 for main model in stage 2.
 
 ```
-# stage2
+# stage 2
 bash scripts/denoiser/flux_qwen2p5vl_7b_vlm_stage2_512.sh
 ```
+
+
 
 # ⚡️ Evaluation
 
