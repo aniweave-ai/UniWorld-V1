@@ -167,16 +167,18 @@ def main(args):
             txt = txt + ocr_sentences
             content.append({"type": "text", "text": txt})
 
+
+        new_h, new_w = args.height, args.width
         if img_input:
             urls = [u.strip() for u in img_input.split(',') if u.strip()]
             for url in urls:
                 content.append({"type": "image", "image": url, "min_pixels": 448*448, "max_pixels": 448*448})
                 history_image_paths.append(url)
         
-        new_h, new_w = update_size(
-            urls[0] if len(urls) > 0 else None, urls[1] if len(urls) > 1 else None, 
-            'any_11ratio', anchor_pixels=args.height * args.width
-            )
+            new_h, new_w = update_size(
+                urls[0] if len(urls) > 0 else None, urls[1] if len(urls) > 1 else None, 
+                'any_11ratio', anchor_pixels=args.height * args.width
+                )
 
 
         conversation.append({"role": "user", "content": content})
