@@ -53,6 +53,7 @@ model_config:
   only_tune_image_branch: true
 
 dataset_config:
+  padding_side: "left"
   ocr_enhancer: false
   dataset_type: qwen2p5vl
   min_pixels: 200704
