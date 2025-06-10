@@ -375,7 +375,7 @@ For more details, please refer to the [Contribution Guidelines](docs/Contributio
 1. **Visual Encoder:** https://github.com/PKU-YuanGroup/UniWorld-V1/issues/5 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/15 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/18
 2. **Data Setup:** https://github.com/PKU-YuanGroup/UniWorld-V1/issues/17
 3. **Editing Evaluation:** https://github.com/PKU-YuanGroup/UniWorld-V1/issues/6 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/16
-3. **Training Process and Analysis:** https://github.com/PKU-YuanGroup/UniWorld-V1/issues/3 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/9 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/14
+3. **Training Process and Analysis:** https://github.com/PKU-YuanGroup/UniWorld-V1/issues/3 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/9 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/14 https://github.com/PKU-YuanGroup/UniWorld-V1/issues/28
 
 
    
