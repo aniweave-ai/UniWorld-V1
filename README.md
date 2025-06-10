@@ -155,7 +155,8 @@ In order to use the Chinese language, run with --zh.
 
 5.Run with ComfyUI
 
-Coming soon...
+Thank you [@judian17](https://github.com/judian17) very much for contribution! [ComfyUI-UniWorld-jd17](https://github.com/judian17/ComfyUI-UniWorld-jd17) is a ComfyUI implementation provided by the open-source community. Please note that the required transformers version is 4.50.0.
+
 
 # 🗝️ Training
 
