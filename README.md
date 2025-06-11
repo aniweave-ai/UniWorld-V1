@@ -4,7 +4,7 @@
 <p>
 <h2 align="center"> 
   <a href="https://arxiv.org/abs/2506.03147">
-    UniWorld: High-Resolution Semantic Encoders for <br> Unified Visual Understanding and Generation
+    UniWorld-V1: High-Resolution Semantic Encoders for <br> Unified Visual Understanding and Generation
   </a>
 </h2>
 
@@ -177,6 +177,44 @@ data/BLIP3o-60k,json/blip3o_t2i_58859.json,false
 data/coco2017_caption_canny-236k,coco2017_canny_236574.json,false
 data/imgedit,json/imgedit/laion_add_part0_edit.json,true
 ```
+We have prepared a `data.txt` file about ImgEdit for your reference.
+<details><summary>`data.txt` for ImgEdit</summary><p>
+    
+```
+data/imgedit/action/action,json/imgedit/pandam_action_edit.json,true
+data/imgedit/action/action_part2,json/imgedit/pandam2_action_edit.json,true
+data/imgedit/action/action_part3,json/imgedit/pandam3_action_edit.json,true
+data/imgedit/action/action_part4,json/imgedit/pandam4_action_edit.json,true
+data/imgedit/add/add_part0,json/imgedit/laion_add_part0_edit.json,true
+data/imgedit/add/add_part1,json/imgedit/laion_add_part1_edit.json,true
+data/imgedit/add/add_part4,json/imgedit/results_add_laion_part4_edit.json,true
+data/imgedit/add/add_part5,json/imgedit/results_add_laion_part5_edit.json,true
+data/imgedit/adjust/adjust_part0,json/imgedit/results_adjust_canny_laion_part0_edit.json,true
+data/imgedit/adjust/adjust_part2,json/imgedit/results_adjust_canny_laion_part2_edit.json,true
+data/imgedit/adjust/adjust_part3,json/imgedit/results_adjust_canny_laion_part3_edit.json,true
+data/imgedit/adjust/adjust_part4,json/imgedit/laion_adjust_canny_part4_edit.json,true
+data/imgedit/background/background_part0,json/imgedit/results_background_laion_part0_edit.json,true
+data/imgedit/background/background_part2,json/imgedit/results_background_laion_part2_edit.json,true
+data/imgedit/background/background_part3,json/imgedit/laion_background_part3_edit.json,true
+data/imgedit/background/background_part5,json/imgedit/laion_background_part5_edit.json,true
+data/imgedit/background/background_part7,json/imgedit/laion_background_part7_edit.json,true
+data/imgedit/compose/compose_part0,json/imgedit/results_compose_part0_edit.json,false
+data/imgedit/compose/compose_part2,json/imgedit/results_compose_part2_edit.json,false
+data/imgedit/compose/compose_part6,json/imgedit/results_compose_part6_fix_edit.json,false
+data/imgedit/refine_replace/refine_replace_part1,json/imgedit/results_extract_ref_part1_refimg_edit.json,true
+data/imgedit/remove/remove_part0,json/imgedit/laion_remove_part0_edit.json,true
+data/imgedit/remove/remove_part1,json/imgedit/results_remove_laion_part1_edit.json,true
+data/imgedit/remove/remove_part4,json/imgedit/results_remove_laion_part4_edit.json,true
+data/imgedit/remove/remove_part5,json/imgedit/results_remove_laion_part5_edit.json,true
+data/imgedit/replace/replace_part0,json/imgedit/laion_replace_part0_edit.json,true
+data/imgedit/replace/replace_part1,json/imgedit/laion_replace_part1_edit.json,true
+data/imgedit/replace/replace_part4,json/imgedit/results_replace_laion_part4_edit.json,true
+data/imgedit/replace/replace_part5,json/imgedit/results_replace_laion_part5_edit.json,true
+data/imgedit/transfer/transfer,json/imgedit/results_style_transfer_edit.json,false
+data/imgedit/transfer/transfer_part0,json/imgedit/results_style_transfer_part0_cap36472_edit.json,false
+```
+
+</p></details>
 
 We provide a simple online verification tool to check whether your paths are set in `data.txt` correctly.
 ```
