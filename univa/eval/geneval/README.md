@@ -73,7 +73,7 @@ pip install -v -e .
 
 ### Generate samples
 
-We also support LLM rewrite prompt, just replace `geneval.yaml` with `geneval_long.yaml` (sourced from [GAGEL](https://github.com/ByteDance-Seed/Bagel/blob/main/eval/gen/geneval/prompts/evaluation_metadata_long.jsonl)) and change `$OUTPUT_DIR`.
+We also support LLM rewrite prompt, just replace `geneval.yaml` with `geneval_long.yaml` (sourced from [BAGEL](https://github.com/ByteDance-Seed/Bagel/blob/main/eval/gen/geneval/prompts/evaluation_metadata_long.jsonl)) and change `$OUTPUT_DIR`.
 
 ```bash
 # switch to univa env
