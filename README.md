@@ -34,8 +34,8 @@
 [![GitHub issues](https://img.shields.io/github/issues/PKU-YuanGroup/UniWorld-V1?color=critical&label=Issues)](https://github.com/PKU-YuanGroup/UniWorld-V1/issues?q=is%3Aopen+is%3Aissue)
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/PKU-YuanGroup/UniWorld-V1?color=success&label=Issues)](https://github.com/PKU-YuanGroup/UniWorld-V1/issues?q=is%3Aissue+is%3Aclosed)
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/uniworld-v1-high-resolution-semantic-encoders/on-wise)](https://paperswithcode.com/sota/on-wise?p=uniworld-v1-high-resolution-semantic-encoders)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/uniworld-v1-high-resolution-semantic-encoders/on-imgedit-data)](https://paperswithcode.com/sota/on-imgedit-data?p=uniworld-v1-high-resolution-semantic-encoders)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/uniworld-v1-high-resolution-semantic-encoders/image-generation-on-wise)](https://paperswithcode.com/sota/image-generation-on-wise?p=uniworld-v1-high-resolution-semantic-encoders)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/uniworld-v1-high-resolution-semantic-encoders/image-editing-on-imgedit-data)](https://paperswithcode.com/sota/image-editing-on-imgedit-data?p=uniworld-v1-high-resolution-semantic-encoders)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/uniworld-v1-high-resolution-semantic-encoders/text-to-image-generation-on-geneval)](https://paperswithcode.com/sota/text-to-image-generation-on-geneval?p=uniworld-v1-high-resolution-semantic-encoders) <br>
 
 # 📣 News
