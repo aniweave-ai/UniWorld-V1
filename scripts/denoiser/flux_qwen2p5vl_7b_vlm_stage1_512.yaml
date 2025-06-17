@@ -65,7 +65,7 @@ dataset_config:
   validation_image_path: assets/rec.jpg
 
   validation_iit2i_prompt: "this is a bus image and a on the back of the bus. <image> <image>"
-  validation_iit2i_path: ["/mnt/data/lb/Remake/UniWorld//assets/bus.png", "/mnt/data/lb/Remake/UniWorld//assets/dog.png"]
+  validation_iit2i_path: ["assets/bus.png", "assets/dog.png"]
   
   validation_cannyt2i_prompt: "Render an image where fine details and textures are filled in based on the provided canny lines, influenced by 'white and black dogs on snow covered ground during daytime'.\n<image>"
   validation_cannyt2i_path: assets/canny.jpg
