@@ -6,7 +6,7 @@ training_config:
   logging_dir: ./logs/flux_qwen2p5vl_7b_vlm_stage1_512_adamw
   max_train_steps: 500000
   optimizer: "adamw"
-  learning_rate: 5e-6
+  learning_rate: 1e-6
   adam_beta1: 0.9
   adam_beta2: 0.99
   adam_epsilon: 1e-8
@@ -15,8 +15,8 @@ training_config:
   report_to: "wandb"
   gradient_checkpointing: true
   num_train_epochs: 1
-  lr_scheduler: "constant"
-  lr_warmup_steps: 0
+  lr_scheduler: "constant_with_warmup"
+  lr_warmup_steps: 5000
   lr_num_cycles: 1
   lr_power: 1.0
   resume_from_checkpoint: null
