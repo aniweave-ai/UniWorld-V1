@@ -367,6 +367,8 @@ cd univa/eval/dpgbench
 
 <details><summary>ImgEdit</summary><p>
 
+We have updated `gpt-4.1` results instead of `gpt-4o-2024-08-06` [here](https://paperswithcode.com/sota/image-editing-on-imgedit-data). See [here](https://github.com/PKU-YuanGroup/UniWorld-V1/issues/34) for more details.
+
 ```
 cd univa/eval/imgedit
 # follow the instruction in univa/eval/imgedit/README.md
