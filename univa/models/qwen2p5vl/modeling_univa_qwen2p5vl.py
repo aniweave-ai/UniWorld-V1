@@ -527,14 +527,37 @@ class UnivaQwen2p5VLForConditionalGeneration(Qwen2_5_VLPreTrainedModel, Generati
                     # outputs_ref_features = self.denoise_tower.vae_projector(ref_features_for_vlm)
                     outputs_ref_features = self.denoise_tower.vae_projector(ref_features_for_vlm)
                     outputs = torch.cat([outputs, outputs_ref_features], dim=1)
-                if siglip_hidden_states is not None:
-                    # siglip_hidden_states = self.denoise_tower.siglip_projector(siglip_hidden_states)
-                    siglip_hidden_states = self.denoise_tower.siglip_projector(siglip_hidden_states)
-                    indices_list = self.find_all_token_positions(input_ids, self.config.image_end_token_id)
-                    # import ipdb;ipdb.set_trace()
-                    outputs, attention_mask = self._insert_img_to_vlm(outputs, attention_mask, siglip_hidden_states, indices_list)
-                    # print(outputs.shape)
-                
+            
+                # 1. prepare siglip_hidden_states
+                dummy = False
+                if siglip_hidden_states is None:
+                    # dummy siglip_hidden_states is not effective for _insert_img_to_vlm, because indices_list is null
+                    siglip_hidden_states = torch.zeros(
+                        input_ids.shape[0], 64, 64, 1152,
+                        dtype=outputs.dtype, device=outputs.device
+                    )
+                    indices_list = [[] for _ in range(input_ids.shape[0])]
+                    dummy = True
+                else:
+                    # reference image task, such as img editing: find all image_end_token_id position
+                    indices_list = self.find_all_token_positions(
+                        input_ids, self.config.image_end_token_id
+                    )
+
+                # 2. all sample will be passed the siglip_projector, including dummy feature
+                siglip_hidden_states = (
+                    self.denoise_tower.siglip_projector(siglip_hidden_states)
+                    .image_embeds
+                )
+                outputs_bak = outputs.detach().clone()
+                attention_mask_bak = attention_mask.detach().clone()
+                # duumy siglip_hidden_states are not effective for _insert_img_to_vlm
+                outputs, attention_mask = self._insert_img_to_vlm(
+                    outputs, attention_mask, siglip_hidden_states, indices_list, dummy
+                )
+                if dummy:  # just double check
+                    assert torch.allclose(outputs, outputs_bak)
+                    assert torch.allclose(attention_mask, attention_mask_bak)
 
             if output_type == "denoise_embeds":
                 # LVLM outputs -> MLP2 -> prompt_embeds
@@ -676,7 +699,7 @@ class UnivaQwen2p5VLForConditionalGeneration(Qwen2_5_VLPreTrainedModel, Generati
         return model_inputs
 
     @staticmethod
-    def _insert_img_to_vlm(vlm_feature, attention_mask, img_feature, indices_list):
+    def _insert_img_to_vlm(vlm_feature, attention_mask, img_feature, indices_list, dummy=False):
         B, L, D = vlm_feature.shape
         assert img_feature.ndim == 3
         img_L = img_feature.shape[1]
@@ -708,11 +731,11 @@ class UnivaQwen2p5VLForConditionalGeneration(Qwen2_5_VLPreTrainedModel, Generati
                 )
 
         img_mask = img_mask.repeat(1, 1, D)
-        assert torch.sum(img_mask) == img_feature.numel()
+        assert dummy or torch.sum(img_mask) == img_feature.numel()
         new_vlm_feature.masked_scatter_(img_mask, img_feature)
 
         vlm_mask = vlm_mask.repeat(1, 1, D)
-        assert torch.sum(vlm_mask) == vlm_feature.numel()
+        assert dummy or torch.sum(vlm_mask) == vlm_feature.numel()
         new_vlm_feature.masked_scatter_(vlm_mask, vlm_feature.view(-1, D))
         return new_vlm_feature, attention_mask
     
