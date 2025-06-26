@@ -533,7 +533,7 @@ class UnivaQwen2p5VLForConditionalGeneration(Qwen2_5_VLPreTrainedModel, Generati
                 if siglip_hidden_states is None:
                     # dummy siglip_hidden_states is not effective for _insert_img_to_vlm, because indices_list is null
                     siglip_hidden_states = torch.zeros(
-                        input_ids.shape[0], 64, 64, 1152,
+                        input_ids.shape[0], 1024, 1152,
                         dtype=outputs.dtype, device=outputs.device
                     )
                     indices_list = [[] for _ in range(input_ids.shape[0])]
@@ -547,7 +547,6 @@ class UnivaQwen2p5VLForConditionalGeneration(Qwen2_5_VLPreTrainedModel, Generati
                 # 2. all sample will be passed the siglip_projector, including dummy feature
                 siglip_hidden_states = (
                     self.denoise_tower.siglip_projector(siglip_hidden_states)
-                    .image_embeds
                 )
                 outputs_bak = outputs.detach().clone()
                 attention_mask_bak = attention_mask.detach().clone()
