@@ -51,5 +51,5 @@ class EvalConfig:
     imgedit_image_dir: str = "/mnt/data/lb/Remake/imgedit_bench_eval_images"
 
     # gedit
-    gedit_prompt_path: str = "univa/eval/gedit/basic_edit.json"
+    gedit_prompt_path: str = "univa/eval/gedit/gedit_edit.json"
     gedit_image_dir: str = "/mnt/data/lb/Remake/gedit_bench_eval_images"
