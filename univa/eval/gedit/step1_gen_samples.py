@@ -227,7 +227,7 @@ def main(args):
     for prompt, output_path, key, image_path in tqdm(inference_list):
 
         output_path = os.path.join(output_path, image_path)
-        real_image_path = os.path.join(args.imgedit_image_dir, image_path)
+        real_image_path = os.path.join(args.gedit_image_dir, image_path)
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
         if os.path.exists(output_path):
