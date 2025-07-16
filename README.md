@@ -19,11 +19,7 @@
 [![demo0](https://img.shields.io/badge/🤗-Demo0-blue.svg)](http://8.130.165.159:8800/)
 [![demo0](https://img.shields.io/badge/🤗-Demo1-blue.svg)](http://8.130.165.159:8801/)
 [![demo0](https://img.shields.io/badge/🤗-Demo2-blue.svg)](http://8.130.165.159:8802/)
-[![demo0](https://img.shields.io/badge/🤗-Demo3-blue.svg)](http://8.130.165.159:8803/)
-[![demo0](https://img.shields.io/badge/🤗-Demo4-blue.svg)](http://8.130.165.159:8804/)
-[![demo0](https://img.shields.io/badge/🤗-Demo5-blue.svg)](http://8.130.165.159:8805/)
-[![demo0](https://img.shields.io/badge/🤗-Demo6-blue.svg)](http://8.130.165.159:8806/)
-[![demo0](https://img.shields.io/badge/🤗-Demo7-blue.svg)](http://8.130.165.159:8807/) <br>
+[![demo0](https://img.shields.io/badge/🤗-Demo3-blue.svg)](http://8.130.165.159:8803/) <br>
 [![GitHub repo stars](https://img.shields.io/github/stars/PKU-YuanGroup/UniWorld-V1?style=flat&logo=github&logoColor=whitesmoke&label=Stars)](https://github.com/PKU-YuanGroup/UniWorld-V1/stargazers)&#160;
 [![GitHub repo forks](https://img.shields.io/github/forks/PKU-YuanGroup/UniWorld-V1?style=flat&logo=github&logoColor=whitesmoke&label=Forks)](https://github.com/PKU-YuanGroup/UniWorld-V1/network)&#160;
 [![GitHub repo watchers](https://img.shields.io/github/watchers/PKU-YuanGroup/UniWorld-V1?style=flat&logo=github&logoColor=whitesmoke&label=Watchers)](https://github.com/PKU-YuanGroup/UniWorld-V1/watchers)&#160;
