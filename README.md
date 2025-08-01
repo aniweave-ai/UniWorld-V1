@@ -158,6 +158,8 @@ Thank you [@judian17](https://github.com/judian17) very much for contribution! [
 
 # 🗝️ Training
 
+**We release the [log](https://api.wandb.ai/links/linbin/c8hjfos5) for stage1 at 512 reslution.**
+
 ### Data preparation
 
 Download the data from [LanguageBind/UniWorld-V1](https://huggingface.co/datasets/LanguageBind/UniWorld-V1). The dataset consists of two parts: source images and annotation JSON files.
