@@ -22,3 +22,6 @@ trainable_params.txt
 **/imgedit_asset
 VLMEvalKit
 **/.gradio
+
+model_weight/
+training_data/

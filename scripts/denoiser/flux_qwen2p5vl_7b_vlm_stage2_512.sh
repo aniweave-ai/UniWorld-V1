@@ -31,11 +31,11 @@ NUM_PROCESSES=1      # Only one process (one GPU)
   # pretrained_siglip_mlp_path
 
 accelerate launch \
-  --config_file scripts/accelerate_configs/multi_node_example_zero2.yaml \
+  --config_file scripts/accelerate_configs/multi_node_example_zero1.yaml \
   --main_process_ip ${MASTER_ADDR} \
   --main_process_port ${MASTER_PORT} \
   --machine_rank ${RANK} \
   --num_machines ${WORLD_SIZE} \
   --num_processes ${NUM_PROCESSES} \
   train_denoiser.py \
-  scripts/denoiser/flux_qwen2p5vl_7b_vlm_stage2_512.yaml
+  scripts/denoiser/my_flux_qwen2p5vl_7b_vlm_stage2_512.yaml
