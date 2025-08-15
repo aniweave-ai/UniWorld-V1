@@ -60,4 +60,4 @@ dataset_config:
   width: 512
   pin_memory: true
   validation_it2i_prompt: "Remove the sectional sofa, the coffee table, the armchair, the floor lamp, the shelf unit, the television, the entertainment console, the table, the dog bed, the dumbbell set, the yoga mat, and the two boxes. <image>"
-  validation_image_path: removal_dataset_validation/IMG_3639.jpg
+  validation_image_path: assets/removal_2.jpg
