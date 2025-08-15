@@ -1,0 +1,63 @@
+training_config:
+  wandb_project: "uniworld"
+  wandb_name: "flux_qwen2p5vl_7b_vlm_stage1_512_adamw"
+  seed: 203
+  output_dir: ./checkpoints/flux_qwen2p5vl_7b_vlm_stage1_512_adamw
+  logging_dir: ./logs/flux_qwen2p5vl_7b_vlm_stage1_512_adamw
+  max_train_steps: 500000
+  optimizer: "prodigy"
+  learning_rate: 1.0
+  adam_beta1: 0.9
+  adam_beta2: 0.99
+  adam_epsilon: 1e-8
+  adam_weight_decay: 0.0
+  mixed_precision: "bf16"
+  report_to: "wandb"
+  gradient_checkpointing: false
+  num_train_epochs: 1
+  lr_scheduler: "constant"
+  lr_warmup_steps: 0
+  lr_num_cycles: 1
+  lr_power: 1.0
+  resume_from_checkpoint: /workspace/UniWorld-V1/checkpoints/flux_qwen2p5vl_7b_vlm_stage1_512_adamw/checkpoint-14000
+  validation_steps: 1000
+  checkpointing_steps: 2000
+  drop_t5_rate: 1.0
+  discrete_timestep: false
+  mask_weight_type: 'log'
+  gradient_accumulation_steps: 1
+  ema_deepspeed_config_file: null #scripts/accelerate_configs/zero1.json
+  ema_decay: 0.999
+
+model_config:
+  pretrained_lvlm_name_or_path: /workspace/UniWorld-V1/model_weight/UniWorld-V1
+  ema_pretrained_lvlm_name_or_path: /workspace/UniWorld-V1/model_weight/UniWorld-V1
+  pretrained_denoiser_name_or_path: /workspace/UniWorld-V1/model_weight/FLUX.1-dev
+  guidance_scale: 1.0
+  only_tune_mlp2: true
+  with_tune_mlp2: false
+  pretrained_mlp2_path: /workspace/UniWorld-V1/model_weight/UniWorld-V1/stage1/denoise_projector.bin
+  only_tune_mlp3: false
+  with_tune_mlp3: false
+  pretrained_mlp3_path: null  
+  only_tune_siglip_mlp: false
+  with_tune_siglip_mlp: false
+  pretrained_siglip_mlp_path: null
+  joint_ref_feature: false
+  only_use_t5: false
+  only_tune_image_branch: false
+
+dataset_config:
+  padding_side: "left"
+  ocr_enhancer: false
+  dataset_type: qwen2p5vl
+  min_pixels: 200704
+  max_pixels: 200704
+  data_txt: /workspace/UniWorld-V1/training_data/uniworld_removal_dataset/data.txt
+  batch_size: 1
+  num_workers: 16
+  height: 512
+  width: 512
+  pin_memory: true
+  validation_it2i_prompt: "Remove the sectional sofa, the coffee table, the armchair, the floor lamp, the shelf unit, the television, the entertainment console, the table, the dog bed, the dumbbell set, the yoga mat, and the two boxes. <image>"
+  validation_image_path: removal_dataset_validation/IMG_3639.jpg
