@@ -1,4 +1,4 @@
-FROM aniweaverick/cuda122-miniconda-devel:latest
+FROM aniweaverick/cuda126-miniconda-devel:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
@@ -11,7 +11,7 @@ WORKDIR /workspace
 RUN apt-get update && apt-get install -y \
     libgl1 libglib2.0-0 \
     libopenmpi-dev openmpi-bin \
-    wget unzip git zsh \
+    wget unzip git zsh tmux \
  && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-c"]
@@ -22,7 +22,7 @@ RUN source /root/miniconda3/etc/profile.d/conda.sh && \
     conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r && \
     conda config --set channel_priority strict && \
     conda config --set always_yes yes && \
-    conda config --set changeps1 no && \
+    conda config --set changeps1 True && \
     conda create -n univa python=3.10 && \
     echo "source /root/miniconda3/etc/profile.d/conda.sh && conda activate univa" >> ~/.bashrc && \
     echo "source /root/miniconda3/etc/profile.d/conda.sh && conda activate univa" >> ~/.zshrc
