@@ -179,10 +179,14 @@ def build_validation_info(args):
         base_eval_prompts.append(args.dataset_config.validation_t2i_prompt)
         base_eval_image_paths.append(None)
         base_phase_names.append('vlm->generate image')
-    if args.dataset_config.validation_it2i_prompt:
-        base_eval_prompts.append(args.dataset_config.validation_it2i_prompt)
-        base_eval_image_paths.append(args.dataset_config.validation_image_path)
-        base_phase_names.append('vlm->reconstruct image')
+
+    # new image-to-image validation cases
+    if hasattr(args.dataset_config, "validation_cases"):
+        for case in args.dataset_config.validation_cases:
+            base_eval_prompts.append(case.validation_it2i_prompt)
+            base_eval_image_paths.append(case.validation_image_path)
+            base_phase_names.append("vlm->reconstruct image")
+
     if args.dataset_config.validation_iit2i_prompt:
         base_eval_prompts.append(args.dataset_config.validation_iit2i_prompt)
         base_eval_image_paths.append(args.dataset_config.validation_iit2i_path)
@@ -316,6 +320,7 @@ def main(args: UnivaTrainingDenoiseConfig, attn_implementation='sdpa'):
         log_with=args.training_config.report_to,
         project_config=accelerator_project_config,
         kwargs_handlers=[ddp_kwargs],
+        device_placement=False,   # manual device transfers to avoid OOM during prepare()
     )
 
     # Set seed
@@ -820,10 +825,25 @@ def main(args: UnivaTrainingDenoiseConfig, attn_implementation='sdpa'):
     device_placement = None
     if accelerator.distributed_type != DistributedType.DEEPSPEED:
         device_placement = [True, True, True, False]
-    lvlm_model, optimizer, lr_scheduler, train_dataloader = accelerator.prepare(
-        lvlm_model, optimizer, lr_scheduler, train_dataloader, 
-        device_placement=device_placement
+
+    # This will OOM while using accelerator
+    # lvlm_model, optimizer, lr_scheduler, train_dataloader = accelerator.prepare(
+    #     lvlm_model, optimizer, lr_scheduler, train_dataloader, 
+    #     device_placement=device_placement
+    # )
+
+
+    # Prepare components in stages to avoid OOM
+    lvlm_model, optimizer, train_dataloader = accelerator.prepare(
+        lvlm_model, optimizer, train_dataloader
     )
+
+    # 3. Prepare scheduler (safe to do after optimizer)
+    lr_scheduler = accelerator.prepare(lr_scheduler)
+
+
+
+
 
     num_update_steps_per_epoch = math.ceil(
         len(train_dataloader) / args.training_config.gradient_accumulation_steps
