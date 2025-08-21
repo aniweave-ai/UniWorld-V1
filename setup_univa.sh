@@ -14,6 +14,8 @@ pip install mpi4py
 # Create model weight directory
 mkdir -p ${MODEL_WEIGHT_DIR}
 
+export HF_HUB_DISABLE_XET="1"  # disable xet backend to avoid download freeze
+
 # Download Hugging Face models
 hf download LanguageBind/UniWorld-V1 \
     --local-dir ${MODEL_WEIGHT_DIR}/UniWorld-V1
