@@ -1,9 +1,9 @@
 training_config:
   wandb_project: "uniworld-s2"
-  wandb_name: "flux_qwen2p5vl_7b_vlm_stage2_512_adamw_1e-6"
+  wandb_name: "flux_qwen2p5vl_7b_vlm_stage2_1024_adamw_1e-6"
   seed: 203
-  output_dir: ./checkpoints/flux_qwen2p5vl_7b_vlm_stage2_512_adamw_1e-6
-  logging_dir: ./logs/flux_qwen2p5vl_7b_vlm_stage2_512_adamw_1e-6
+  output_dir: ./checkpoints/flux_qwen2p5vl_7b_vlm_stage2_1024_adamw_1e-6
+  logging_dir: ./logs/flux_qwen2p5vl_7b_vlm_stage2_1024_adamw_1e-6
   max_train_steps: 500000
   optimizer: "adamw"
   learning_rate: 1e-6

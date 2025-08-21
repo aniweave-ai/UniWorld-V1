@@ -22,14 +22,12 @@ WORLD_SIZE=1         # Only one machine
 NUM_PROCESSES=1      # Only one process (one GPU)
 
 
+
 # NEED MODIFY in YAML:
   # data_txt
-  # pretrained_lvlm_name_or_path: recommend use ema weight in stage1
-  # ema_pretrained_lvlm_name_or_path: recommend use ema weight in stage1
+  # pretrained_lvlm_name_or_path
+  # ema_pretrained_lvlm_name_or_path: same with pretrained_lvlm_name_or_path when the first training
   # pretrained_denoiser_name_or_path
-  # pretrained_mlp2_path: recomment use ema weight in stage1
-  # pretrained_siglip_mlp_path
-
 accelerate launch \
   --config_file scripts/accelerate_configs/multi_node_example_zero1.yaml \
   --main_process_ip ${MASTER_ADDR} \
@@ -38,4 +36,4 @@ accelerate launch \
   --num_machines ${WORLD_SIZE} \
   --num_processes ${NUM_PROCESSES} \
   train_denoiser.py \
-  scripts/denoiser/my_flux_qwen2p5vl_7b_vlm_stage2_512.yaml
+  scripts/denoiser/my_flux_qwen2p5vl_7b_vlm_stage1_1024.yaml
