@@ -893,7 +893,7 @@ def main(args: UnivaTrainingDenoiseConfig, attn_implementation='sdpa'):
         text_encoder_cls_one,
         text_encoder_cls_two,
     ]
-    empty_t5_prompt_embeds, empty_pooled_prompt_embeds = encode_prompt(
+    empty_t5_prompt_embeds, base_empty_pooled_prompt_embeds = encode_prompt(
         text_encoders,
         tokenizers,
         prompt="",
@@ -901,7 +901,8 @@ def main(args: UnivaTrainingDenoiseConfig, attn_implementation='sdpa'):
         device=accelerator.device,
         num_images_per_prompt=1,
     )
-    empty_pooled_prompt_embeds = empty_pooled_prompt_embeds.repeat(
+
+    empty_pooled_prompt_embeds = base_empty_pooled_prompt_embeds.repeat(
         args.dataset_config.batch_size, 1
     )
 
@@ -1173,6 +1174,11 @@ def main(args: UnivaTrainingDenoiseConfig, attn_implementation='sdpa'):
                         )
                 else:
                     ref_features_for_vlm = None
+
+                # Adjust empty_pooled_prompt_embeds for smaller last batch (prevents size mismatch)
+                current_bsz = input_ids.shape[0]
+                if current_bsz != empty_pooled_prompt_embeds.shape[0]:
+                    empty_pooled_prompt_embeds = base_empty_pooled_prompt_embeds.repeat(current_bsz, 1)
 
                 model_pred = lvlm_model(
                     input_ids=input_ids,
