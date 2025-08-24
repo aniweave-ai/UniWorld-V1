@@ -60,6 +60,13 @@ class TrainingConfig:
     ema_update_freq: int = 1
     ema_decay: float = 0.99
 
+
+@dataclass
+class ValidationCase:
+    validation_it2i_prompt: str
+    validation_image_path: str
+
+
 @dataclass
 class DatasetConfig:
     dataset_type: str
@@ -76,6 +83,11 @@ class DatasetConfig:
     padding_side: str = 'right'
     validation_t2i_prompt: Optional[str] = None
     validation_it2i_prompt: Optional[str] = None
+
+    # new multiple validation cases
+    validation_cases: Optional[List[ValidationCase]] = None
+
+
     validation_image_path: Optional[str] = None
     pin_memory: bool = True
     validation_iit2i_prompt: Optional[str] = None

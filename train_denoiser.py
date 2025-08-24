@@ -179,10 +179,14 @@ def build_validation_info(args):
         base_eval_prompts.append(args.dataset_config.validation_t2i_prompt)
         base_eval_image_paths.append(None)
         base_phase_names.append('vlm->generate image')
-    if args.dataset_config.validation_it2i_prompt:
-        base_eval_prompts.append(args.dataset_config.validation_it2i_prompt)
-        base_eval_image_paths.append(args.dataset_config.validation_image_path)
-        base_phase_names.append('vlm->reconstruct image')
+
+    # new image-to-image validation cases
+    if hasattr(args.dataset_config, "validation_cases"):
+        for case in args.dataset_config.validation_cases:
+            base_eval_prompts.append(case.validation_it2i_prompt)
+            base_eval_image_paths.append(case.validation_image_path)
+            base_phase_names.append("vlm->reconstruct image")
+
     if args.dataset_config.validation_iit2i_prompt:
         base_eval_prompts.append(args.dataset_config.validation_iit2i_prompt)
         base_eval_image_paths.append(args.dataset_config.validation_iit2i_path)
