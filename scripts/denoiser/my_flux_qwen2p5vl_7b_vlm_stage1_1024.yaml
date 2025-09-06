@@ -61,8 +61,15 @@ dataset_config:
   pin_memory: true
 
   validation_cases:
-    - validation_it2i_prompt: "Remove the sectional sofa, the coffee table, the armchair, the floor lamp, the shelf unit, the television, the entertainment console, the table, the dog bed, the dumbbell set, the yoga mat, and the two boxes. <image>"
+    # Empty
+    - validation_it2i_prompt: "Remove bed, clothes, bags, suitcase, portable air conditioner, fan, appliance, shoe racks, shoes, box, ironing board, clothes rack, poster, small table. <image>"
+      validation_image_path: assets/removal_2.jpg
+
+    - validation_it2i_prompt: "Remove table, office chair, woven chair, laptop, printer, stool, shelving unit, lamp, vase, clothing racks, clothes, hangers, orange chair, dressing mannequin, shoes, coffee table, blue chair, papers, boxes. <image>"
+      validation_image_path: assets/removal_5.jpg
+    # Clean
+    - validation_it2i_prompt: "Remove red dumbbells, yellow jump rope, cardboard boxes, laptop, small potted plant, globe, red jars, electronics and cables on the TV console, pink fabric, white pet bed. <image>"
       validation_image_path: assets/removal_1.jpg
 
-    - validation_it2i_prompt: "Remove the white shelving unit with a red and white sign, the white shoe rack with shoes, the clear plastic shoe rack with shoes, the blue storage box, the clothes on the bed, the black trash bags, the blue suitcase, the white fan, the white portable air conditioner, and the ironing board. <image>"
-      validation_image_path: assets/removal_2.jpg
+    - validation_it2i_prompt: "Remove a black bag, small items on the nightstand, a rolled-up rug, folded clothes, and a white heater unit. <image>"
+      validation_image_path: assets/removal_3.jpg
