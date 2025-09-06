@@ -29,18 +29,18 @@ hf download Qwen/Qwen2.5-VL-7B-Instruct \
 # Download training dataset
 mkdir -p /workspace/UniWorld-V1/training_data
 cd /workspace/UniWorld-V1/training_data
-wget -O uniworld_removal_dataset_v1.1.zip https://training-dataset.utils.aniweave.ai/uniworld/uniworld_removal_dataset_v1.1.zip
-unzip -o uniworld_removal_dataset_v1.1.zip
+wget -O uniworld_removal_dataset_v2.0.0.zip https://training-dataset.utils.aniweave.ai/uniworld/uniworld_removal_dataset_v2.0.0.zip
+unzip -o uniworld_removal_dataset_v2.0.0.zip
 
 
 # modify data.txt from training dataset
 
 # File to modify
-FILE="/workspace/UniWorld-V1/training_data/uniworld_removal_dataset/data.txt"
+FILE="/workspace/UniWorld-V1/training_data/uniworld_removal_dataset_v2.0.0/data.txt"
 
 # Old and new path
-OLD_PATH="/Users/rick/Desktop/AniWeave/UniWorld-V1/training_data/uniworld_removal_dataset"
-NEW_PATH="/workspace/UniWorld-V1/training_data/uniworld_removal_dataset"
+OLD_PATH="/Users/rick/Desktop/AniWeave/scene-gen-train/data/uniworld_removal_dataset_v2.0.0"
+NEW_PATH="/workspace/UniWorld-V1/training_data/uniworld_removal_dataset_v2.0.0"
 
 # Replace paths in-place
 sed -i.bak "s|$OLD_PATH|$NEW_PATH|g" "$FILE"
