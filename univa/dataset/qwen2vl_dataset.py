@@ -1,93 +1,94 @@
-from typing import Any, Callable, Optional, List
-
-import torch
-from transformers import PreTrainedTokenizer
-from torch.utils.data import Dataset
-from tqdm import tqdm
+import base64
 import json
 import os
-from PIL import Image
-from univa.utils.prompter import Prompter
-import numpy as np
-from einops import rearrange
 import random
-# from qwen_vl_utils.vision_process import fetch_image, fetch_video
-from qwen_vl_utils.vision_process import to_rgb, smart_resize, fetch_video
-from univa.utils.constant import SPACIAL_TOKEN, GENERATE_TOKEN
-from univa.utils.get_mask import get_weight_mask
-from univa.utils.get_ocr import get_ocr_result
 from fractions import Fraction
-from torchvision.transforms import functional
-from torchvision import transforms
 from io import BytesIO
-import base64
+from typing import Any, Callable, List, Optional
+
+import numpy as np
 import requests
 import torch
+from einops import rearrange
 from PIL import Image
-from torchvision import io, transforms
-from typing import Optional
+
+# from qwen_vl_utils.vision_process import fetch_image, fetch_video
+from qwen_vl_utils.vision_process import fetch_video, smart_resize, to_rgb
+from torch.utils.data import Dataset
+from tqdm import tqdm
+from transformers import PreTrainedTokenizer
+
+from univa.utils.constant import GENERATE_TOKEN, SPACIAL_TOKEN
+from univa.utils.get_mask import get_weight_mask
+from univa.utils.get_ocr import get_ocr_result
+from univa.utils.prompter import Prompter
 
 
 def get_aspect_ratio(img):
     width, height = img.size
     return Fraction(width, height).limit_denominator()
 
+
 def has_same_aspect_ratio(img1, img2):
     if not isinstance(img1, Image.Image):
-        img1 = Image.open(img1).convert('RGB')
+        img1 = Image.open(img1).convert("RGB")
     if not isinstance(img2, Image.Image):
-        img2 = Image.open(img2).convert('RGB')
+        img2 = Image.open(img2).convert("RGB")
     ratio1 = get_aspect_ratio(img1)
     ratio2 = get_aspect_ratio(img2)
     return ratio1 == ratio2
 
+
 def has_same_resolution(img1, img2):
     if not isinstance(img1, Image.Image):
-        img1 = Image.open(img1).convert('RGB')
+        img1 = Image.open(img1).convert("RGB")
     if not isinstance(img2, Image.Image):
-        img2 = Image.open(img2).convert('RGB')
+        img2 = Image.open(img2).convert("RGB")
     return img1.size == img2.size
+
 
 class Qwen2VLDataset(Dataset):
     def __init__(
         self,
         dataset_type: str,
         data_txt: str,
-        transform: Callable, 
+        transform: Callable,
         tokenizer: PreTrainedTokenizer,
         prompter: Prompter,
         image_processor: Callable,
         processor: Callable = None,
-        min_pixels: int = 384*384, 
-        max_pixels: int = 384*384, 
+        min_pixels: int = 384 * 384,
+        max_pixels: int = 384 * 384,
         image_token_length: int = 729,
         only_generated_task: bool = False,
         drop_prompt_rate: float = 0.0,
         joint_ref_feature: bool = False,
-        anyres: bool = False, 
-        mask_weight_type: str = 'log', 
+        anyres: bool = False,
+        mask_weight_type: str = "log",
         siglip_processor: Callable = None,
-        ocr_enhancer: bool = False, 
-        random_data: bool = False, 
-        maxnum_per_data: int = -1, 
-        notry: bool = False, 
+        ocr_enhancer: bool = False,
+        random_data: bool = False,
+        maxnum_per_data: int = -1,
+        notry: bool = False,
     ):
-        assert dataset_type == 'qwen2vl' or dataset_type == 'qwen2p5vl', "dataset_type == 'qwen2vl' or dataset_type == 'qwen2p5vl'"
+        assert dataset_type == "qwen2vl" or dataset_type == "qwen2p5vl", (
+            "dataset_type == 'qwen2vl' or dataset_type == 'qwen2p5vl'"
+        )
         with open(data_txt, "r") as f:
             self.datasets = [line.strip() for line in f.readlines()]
 
         self.data = []
         self._load_data(maxnum_per_data)
-        
+
         self.transform = transform
         self.processor = processor
         self.tokenizer = processor.tokenizer
         self.prompter = prompter
         self.min_pixels = min_pixels
         self.max_pixels = max_pixels
-        self.image_token = SPACIAL_TOKEN[dataset_type]['image_token']
-        self.image_begin_token = SPACIAL_TOKEN[dataset_type]['image_begin_token']
-        self.image_end_token = SPACIAL_TOKEN[dataset_type]['image_end_token']
+        self.image_token = SPACIAL_TOKEN[dataset_type]["image_token"]
+        self.image_begin_token = SPACIAL_TOKEN[dataset_type]["image_begin_token"]
+        self.image_end_token = SPACIAL_TOKEN[dataset_type]["image_end_token"]
         self.generated_image_token = GENERATE_TOKEN
         self.image_processor = processor.image_processor
         # self.factor = 4 if joint_ref_feature else 1
@@ -130,7 +131,7 @@ class Qwen2VLDataset(Dataset):
             with open(json_file, "r") as f:
                 data = json.load(f)
             if maxnum_per_data > 0 and maxnum_per_data < len(data):
-                print(f'original data: {len(data)}, sample: {maxnum_per_data}')
+                print(f"original data: {len(data)}, sample: {maxnum_per_data}")
                 data = random.sample(data, maxnum_per_data)
             dataset_data = []
             for line in tqdm(data):
@@ -156,8 +157,9 @@ class Qwen2VLDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-    def _get_random_data(self, ):
-        
+    def _get_random_data(
+        self,
+    ):
         prompt = self.prompter(
             [
                 {"from": "system", "value": "You are a helpful assistant."},
@@ -168,58 +170,63 @@ class Qwen2VLDataset(Dataset):
             ]
         )
         input_ids = self.tokenizer.batch_encode_plus(
-            [prompt], return_tensors="pt", truncation=False,
+            [prompt],
+            return_tensors="pt",
+            truncation=False,
         ).input_ids
         labels = input_ids
 
         width, height = 448, 448
         random_data = np.random.randint(0, 256, (height, width, 3), dtype=np.uint8)
-        image = Image.fromarray(random_data, 'RGB')
+        image = Image.fromarray(random_data, "RGB")
 
         image_slice = [image]
         image_dict = self._load_image(
-            image_slice, self.max_pixels, self.min_pixels, 
-            processor=self.processor, image_token=self.image_token, 
-            factor=self.factor, 
+            image_slice,
+            self.max_pixels,
+            self.min_pixels,
+            processor=self.processor,
+            image_token=self.image_token,
+            factor=self.factor,
             last_image=image,
-            vae_image_transform=self.transform, 
-            drop_prompt=False, 
-            prompt=prompt, 
-            mask_weight_type=self.mask_weight_type, 
-            siglip_processor=self.siglip_processor, 
-            )
-        
-        image_token_lengths = image_dict['image_token_lengths']
-        pixel_values = image_dict['pixel_values']
-        image_grid_thw = image_dict['image_grid_thw']
-        ref_pixel_values = image_dict['ref_pixel_values']
-        pil_pixel_values = image_dict['pil_pixel_values']
-        siglip_pixel_values = image_dict['siglip_pixel_values']
-        weights = image_dict['weights']
+            vae_image_transform=self.transform,
+            drop_prompt=False,
+            prompt=prompt,
+            mask_weight_type=self.mask_weight_type,
+            siglip_processor=self.siglip_processor,
+        )
+
+        image_token_lengths = image_dict["image_token_lengths"]
+        pixel_values = image_dict["pixel_values"]
+        image_grid_thw = image_dict["image_grid_thw"]
+        ref_pixel_values = image_dict["ref_pixel_values"]
+        pil_pixel_values = image_dict["pil_pixel_values"]
+        siglip_pixel_values = image_dict["siglip_pixel_values"]
+        weights = image_dict["weights"]
 
         input_ids, labels, image_position = self._process_image_token(
-                input_ids,
-                labels=labels,
-                image_token_id=self.image_token_id,
-                image_begin_token_id=self.image_begin_token_id,
-                image_end_token_id=self.image_end_token_id,
-                image_token_lengths=image_token_lengths, 
-            )
-        
+            input_ids,
+            labels=labels,
+            image_token_id=self.image_token_id,
+            image_begin_token_id=self.image_begin_token_id,
+            image_end_token_id=self.image_end_token_id,
+            image_token_lengths=image_token_lengths,
+        )
+
         generated_image = torch.randn(3, 512, 512)
-        
+
         return_data = {
             "input_ids": input_ids,
             "labels": labels,
             "pixel_values": pixel_values,
             "image_position": image_position,
-            "image_grid_thw": image_grid_thw, 
+            "image_grid_thw": image_grid_thw,
             "prompt": prompt,
-            "ref_pixel_values": ref_pixel_values, 
-            "pil_pixel_values": pil_pixel_values, 
-            "siglip_pixel_values": siglip_pixel_values, 
-            "weights": weights, 
-            "generated_image": generated_image, 
+            "ref_pixel_values": ref_pixel_values,
+            "pil_pixel_values": pil_pixel_values,
+            "siglip_pixel_values": siglip_pixel_values,
+            "weights": weights,
+            "generated_image": generated_image,
         }
         return return_data
 
@@ -238,7 +245,7 @@ class Qwen2VLDataset(Dataset):
             conversations.append({"from": role, "value": item["value"]})
         assert prompt != "", "prompt != ''"
         # The last turn instruction will be used for t5_embed
-        prompt = prompt.replace('<image>', '').replace('\n', '')
+        prompt = prompt.replace("<image>", "").replace("\n", "")
 
         # Make prompt
         drop_prompt = False
@@ -247,7 +254,9 @@ class Qwen2VLDataset(Dataset):
                 prompt_list = self.prompter.get_train_prompt(conversations)
             else:
                 drop_prompt = True
-                num_images = (''.join([i['value'] for i in conversations])).count('<image>')
+                num_images = ("".join([i["value"] for i in conversations])).count(
+                    "<image>"
+                )
                 # Drop the prompt
                 prompt_list = [
                     {
@@ -267,15 +276,17 @@ class Qwen2VLDataset(Dataset):
                 prompt_list = self.prompter.get_train_prompt(prompt_list)
         else:
             prompt_list = self.prompter.get_train_prompt(conversations)
-            
+
         input_ids = []
         labels = []
         has_generated_image = False
         cur_i = 0
         for item in prompt_list:
-            item["prompt"] = item["prompt"].replace('<image>', self.image_token)
-            
-            if self.generated_image_token in item["prompt"]:  # Check if self.generated_image_token in prompt
+            item["prompt"] = item["prompt"].replace("<image>", self.image_token)
+
+            if (
+                self.generated_image_token in item["prompt"]
+            ):  # Check if self.generated_image_token in prompt
                 assert item["from"] == self.prompter.assistant_role, (
                     "Generated image token must be in assistant role"
                 )
@@ -297,24 +308,36 @@ class Qwen2VLDataset(Dataset):
                     num_img = item["prompt"].count(self.image_token)
                     ocr_sentences = []
                     for i in range(num_img):
-                        ocr_sentences.append(get_ocr_result(data["image"][cur_i], cur_i))
+                        ocr_sentences.append(
+                            get_ocr_result(data["image"][cur_i], cur_i)
+                        )
                         cur_i += 1
-                    ocr_sentences = '\n'.join(ocr_sentences)
+                    ocr_sentences = "\n".join(ocr_sentences)
                     if len(ocr_sentences.split()) > 256:
-                        print(f'ocr_sentences too long, total len {len(ocr_sentences.split())} trunk first 256')
-                        ocr_sentences = ' '.join(ocr_sentences.split()[:256])
+                        print(
+                            f"ocr_sentences too long, total len {len(ocr_sentences.split())} trunk first 256"
+                        )
+                        ocr_sentences = " ".join(ocr_sentences.split()[:256])
                     # ocr_sentences = ''
-                    assert item['prompt'][-len(self.prompter.eos_token):] == self.prompter.eos_token, \
+                    assert (
+                        item["prompt"][-len(self.prompter.eos_token) :]
+                        == self.prompter.eos_token
+                    ), (
                         "item['prompt'][-len(self.prompter.eos_token):] == self.prompter.eos_token"
-                    assert item['prompt'].count(self.prompter.eos_token) == 1, \
+                    )
+                    assert item["prompt"].count(self.prompter.eos_token) == 1, (
                         "item['prompt'].count(self.prompter.eos_token) == 1"
-                    item["prompt"] = item["prompt"].replace(self.prompter.eos_token, f'{ocr_sentences} {self.prompter.eos_token}')
+                    )
+                    item["prompt"] = item["prompt"].replace(
+                        self.prompter.eos_token,
+                        f"{ocr_sentences} {self.prompter.eos_token}",
+                    )
 
             tokenized_item = self.tokenizer(
                 item["prompt"],
                 return_tensors="pt",
                 truncation=True,
-                max_length=1024, 
+                max_length=1024,
             )
             if item["is_labels"]:  # If this prompt is labels
                 labels.append(tokenized_item.input_ids)
@@ -341,27 +364,29 @@ class Qwen2VLDataset(Dataset):
             # understanding task
             image_slice = data["image"]
 
-
         image_dict = self._load_image(
-            image_slice, self.max_pixels, self.min_pixels, 
-            processor=self.processor, image_token=self.image_token, 
-            factor=self.factor, 
+            image_slice,
+            self.max_pixels,
+            self.min_pixels,
+            processor=self.processor,
+            image_token=self.image_token,
+            factor=self.factor,
             last_image=data["image"][-1] if has_generated_image else None,
-            vae_image_transform=self.transform, 
-            drop_prompt=drop_prompt, 
-            prompt=prompt, 
-            mask_weight_type=self.mask_weight_type, 
-            siglip_processor=self.siglip_processor, 
-            need_weight=data['need_weight'], 
-            )
-        
-        image_token_lengths = image_dict['image_token_lengths']
-        pixel_values = image_dict['pixel_values']
-        image_grid_thw = image_dict['image_grid_thw']
-        ref_pixel_values = image_dict['ref_pixel_values']
-        pil_pixel_values = image_dict['pil_pixel_values']
-        siglip_pixel_values = image_dict['siglip_pixel_values']
-        weights = image_dict['weights']
+            vae_image_transform=self.transform,
+            drop_prompt=drop_prompt,
+            prompt=prompt,
+            mask_weight_type=self.mask_weight_type,
+            siglip_processor=self.siglip_processor,
+            need_weight=data["need_weight"],
+        )
+
+        image_token_lengths = image_dict["image_token_lengths"]
+        pixel_values = image_dict["pixel_values"]
+        image_grid_thw = image_dict["image_grid_thw"]
+        ref_pixel_values = image_dict["ref_pixel_values"]
+        pil_pixel_values = image_dict["pil_pixel_values"]
+        siglip_pixel_values = image_dict["siglip_pixel_values"]
+        weights = image_dict["weights"]
 
         input_ids, labels, image_position = self._process_image_token(
             input_ids,
@@ -369,24 +394,23 @@ class Qwen2VLDataset(Dataset):
             image_token_id=self.image_token_id,
             image_begin_token_id=self.image_begin_token_id,
             image_end_token_id=self.image_end_token_id,
-            image_token_lengths=image_token_lengths, 
+            image_token_lengths=image_token_lengths,
         )
-
 
         return_data = {
             "input_ids": input_ids,
             "labels": labels,
             "pixel_values": pixel_values,
             "image_position": image_position,
-            "image_grid_thw": image_grid_thw, 
+            "image_grid_thw": image_grid_thw,
             "prompt": prompt,
-            "ref_pixel_values": ref_pixel_values, 
-            "pil_pixel_values": pil_pixel_values, 
-            "siglip_pixel_values": siglip_pixel_values, 
-            "weights": weights, 
+            "ref_pixel_values": ref_pixel_values,
+            "pil_pixel_values": pil_pixel_values,
+            "siglip_pixel_values": siglip_pixel_values,
+            "weights": weights,
         }
 
-        if has_generated_image: # If this item is a generation task
+        if has_generated_image:  # If this item is a generation task
             image = Image.open(data["image"][-1]).convert("RGB")
             # if self.anyres:
             #     image = image.resize(pil_pixel_values[-1].size)
@@ -396,54 +420,61 @@ class Qwen2VLDataset(Dataset):
         else:
             return_data["generated_image"] = []
         return return_data
-    
+
     def __getitem__(self, idx):
         if self.random_data:
             return self._get_random_data()
-        
+
         data: Any = self.data[idx]
         if self.notry:
             return self.getitem(data)
         try:
             return self.getitem(data)
         except Exception as e:
-            print(f'Error with {e}')
-            return self.__getitem__(random.randint(0, self.__len__()-1))
+            print(f"Error with {e}")
+            return self.__getitem__(random.randint(0, self.__len__() - 1))
 
     @staticmethod
     def _load_image(
         image_slice: List[str],
-        max_pixels: int = 448*448,  
-        min_pixels: int = 448*448, 
-        processor: Callable = None, 
-        image_processor: Callable = None, 
-        image_token_lengths: int = 729, 
-        image_token: str = '<|image_pad|>', 
-        factor: int = 1, 
-        last_image: Optional[str] = None, 
+        max_pixels: int = 448 * 448,
+        min_pixels: int = 448 * 448,
+        processor: Callable = None,
+        image_processor: Callable = None,
+        image_token_lengths: int = 729,
+        image_token: str = "<|image_pad|>",
+        factor: int = 1,
+        last_image: Optional[str] = None,
         vae_image_transform: Callable = None,
-        drop_prompt: bool = False, 
-        prompt: str = '', 
-        mask_weight_type: str = None, 
-        siglip_processor: Callable = None, 
-        need_weight: str = 'true', 
+        drop_prompt: bool = False,
+        prompt: str = "",
+        mask_weight_type: str = None,
+        siglip_processor: Callable = None,
+        need_weight: str = "true",
     ):
         resize_ref_image = False
         pil_pixel_values_last = []
         if last_image is not None:
             last_vision_infos = dict(
                 image=last_image, min_pixels=min_pixels, max_pixels=max_pixels
-                )
+            )
             # last_image will be resize by qwenvl-processor automatically
             # generated variable resolution
-            last_image_inputs, last_video_inputs = process_vision_info([last_vision_infos], factor=factor)
+            last_image_inputs, last_video_inputs = process_vision_info(
+                [last_vision_infos], factor=factor
+            )
 
             # logging what size will be process when use qwenvl-processor
             pil_pixel_values_last.append(last_image_inputs[0])
-            
+
             # not all reference images are same resolution
             # if multiple reference images and they have different resolution, resize it depend on last_image (generated_image)
-            if not all([has_same_resolution(image_path, last_image) for image_path in image_slice]):
+            if not all(
+                [
+                    has_same_resolution(image_path, last_image)
+                    for image_path in image_slice
+                ]
+            ):
                 resize_ref_image = True
                 resize_w, resize_h = last_image_inputs[0].size
 
@@ -454,24 +485,43 @@ class Qwen2VLDataset(Dataset):
         pil_pixel_values = []
         siglip_pixel_values = []
         # Ignore the last image (generated image)
-        for image_path in image_slice: 
-            vision_infos = dict(image=image_path, min_pixels=min_pixels, max_pixels=max_pixels)
-            
+        for image_path in image_slice:
+            vision_infos = dict(
+                image=image_path, min_pixels=min_pixels, max_pixels=max_pixels
+            )
+
             # if multiple reference images and they have different aspect ratio, resize it depend on generated_image (last_image)
             if resize_ref_image:
                 vision_infos.update(
                     dict(resized_height=resize_h, resized_width=resize_w)
-                    )
-            image_inputs, video_inputs = process_vision_info([vision_infos], factor=factor)
-            inputs = processor(text=[f'dummy {image_token}'], images=image_inputs, videos=video_inputs, padding=True, return_tensors="pt")
-            
+                )
+            image_inputs, video_inputs = process_vision_info(
+                [vision_infos], factor=factor
+            )
+            inputs = processor(
+                text=[f"dummy {image_token}"],
+                images=image_inputs,
+                videos=video_inputs,
+                padding=True,
+                return_tensors="pt",
+            )
+
             if not drop_prompt:
-                pixel_values.append(inputs.pixel_values)  # inputs.pixel_values shape is (token, dim)
-                image_grid_thw.append(inputs.image_grid_thw)  # image_grid_thw List[int, int, int]
-                image_token_length = (inputs.input_ids[0] == processor.tokenizer.convert_tokens_to_ids(image_token)).sum()
+                pixel_values.append(
+                    inputs.pixel_values
+                )  # inputs.pixel_values shape is (token, dim)
+                image_grid_thw.append(
+                    inputs.image_grid_thw
+                )  # image_grid_thw List[int, int, int]
+                image_token_length = (
+                    inputs.input_ids[0]
+                    == processor.tokenizer.convert_tokens_to_ids(image_token)
+                ).sum()
                 image_token_lengths.append(image_token_length)
 
-            image_tensor = torch.tensor(np.array(image_inputs[0])) / 255.0  # scale to 0-1
+            image_tensor = (
+                torch.tensor(np.array(image_inputs[0])) / 255.0
+            )  # scale to 0-1
             image_tensor = rearrange(image_tensor, "h w c -> 1 c h w")
             if vae_image_transform is not None:
                 # image_tensor has been resized by qwenvl-processor
@@ -480,9 +530,13 @@ class Qwen2VLDataset(Dataset):
 
             if siglip_processor is not None:
                 siglip_pixel_value = siglip_processor.preprocess(
-                            images=Image.open(image_path).convert('RGB') if isinstance(image_path, str) else image_path, 
-                            do_resize=True, return_tensors="pt", do_convert_rgb=True
-                        ).pixel_values  # 1 c h w
+                    images=Image.open(image_path).convert("RGB")
+                    if isinstance(image_path, str)
+                    else image_path,
+                    do_resize=True,
+                    return_tensors="pt",
+                    do_convert_rgb=True,
+                ).pixel_values  # 1 c h w
                 if drop_prompt:
                     siglip_pixel_values.append(torch.zeros_like(siglip_pixel_value))
                 else:
@@ -492,37 +546,39 @@ class Qwen2VLDataset(Dataset):
                 ref_pixel_values.append(torch.zeros_like(image_tensor))
             else:
                 ref_pixel_values.append(image_tensor)
-            
 
-            
         # if multi-image in a sample, concat them
         # assume pixel_values[0] (n1, 1176), pixel_values[1] (n2, 1176), pixel_values will be (n1+n2, 1176)
         if len(pixel_values) > 0:
             pixel_values = torch.concat(pixel_values)
-            image_grid_thw = torch.concat(image_grid_thw)  # (b, 3), 3 mean the grid of t, h, w
-        # if len(ref_pixel_values) > 0: 
+            image_grid_thw = torch.concat(
+                image_grid_thw
+            )  # (b, 3), 3 mean the grid of t, h, w
+        # if len(ref_pixel_values) > 0:
         #     ref_pixel_values = torch.concat(ref_pixel_values)  # b c h w
         ref_pixel_values = []
-        if len(siglip_pixel_values) > 0: 
+        if len(siglip_pixel_values) > 0:
             siglip_pixel_values = torch.concat(siglip_pixel_values)  # b c h w
 
         pil_pixel_values = pil_pixel_values + pil_pixel_values_last
-        
+
         if mask_weight_type is not None:
-            _, weights = get_weight_mask(pil_pixel_values, prompt, mask_weight_type, need_weight)
-            if need_weight.lower() == 'false':
+            _, weights = get_weight_mask(
+                pil_pixel_values, prompt, mask_weight_type, need_weight
+            )
+            if need_weight.lower() == "false":
                 assert torch.all(weights == 1)
         else:
             weights = []
         return {
-            'pixel_values': pixel_values, 
-            'image_grid_thw': image_grid_thw, 
-            'image_token_lengths': image_token_lengths, 
-            'ref_pixel_values': ref_pixel_values, 
-            'pil_pixel_values': pil_pixel_values, 
-            'siglip_pixel_values': siglip_pixel_values, 
-            'weights': weights, 
-            }
+            "pixel_values": pixel_values,
+            "image_grid_thw": image_grid_thw,
+            "image_token_lengths": image_token_lengths,
+            "ref_pixel_values": ref_pixel_values,
+            "pil_pixel_values": pil_pixel_values,
+            "siglip_pixel_values": siglip_pixel_values,
+            "weights": weights,
+        }
 
     @staticmethod
     def _process_image_token(
@@ -544,7 +600,9 @@ class Qwen2VLDataset(Dataset):
         for idx in image_token_indices[1]:
             image_token_length = image_token_lengths[cur_i]
             adjusted_idx = idx + offset
-            assert input_ids[0, adjusted_idx] == image_token_id, "assert input_ids[0, adjusted_idx] == image_token_id"
+            assert input_ids[0, adjusted_idx] == image_token_id, (
+                "assert input_ids[0, adjusted_idx] == image_token_id"
+            )
 
             # Add image begin and end token
             input_ids = torch.cat(
@@ -583,9 +641,11 @@ class Qwen2VLDataset(Dataset):
             cur_i += 1
 
         return input_ids, labels, image_position
-    
 
-def fetch_image(ele: dict[str, str | Image.Image], size_factor: int = 28) -> Image.Image:
+
+def fetch_image(
+    ele: dict[str, str | Image.Image], size_factor: int = 28
+) -> Image.Image:
     if "image" in ele:
         image = ele["image"]
     else:
@@ -606,7 +666,9 @@ def fetch_image(ele: dict[str, str | Image.Image], size_factor: int = 28) -> Ima
     else:
         image_obj = Image.open(image)
     if image_obj is None:
-        raise ValueError(f"Unrecognized image input, support local path, http url, base64 and PIL.Image, got {image}")
+        raise ValueError(
+            f"Unrecognized image input, support local path, http url, base64 and PIL.Image, got {image}"
+        )
     image = to_rgb(image_obj)
     ## resize
     if "resized_height" in ele and "resized_width" in ele:
@@ -626,25 +688,33 @@ def fetch_image(ele: dict[str, str | Image.Image], size_factor: int = 28) -> Ima
             min_pixels=min_pixels,
             max_pixels=max_pixels,
         )
-    image = image.resize((resized_width, resized_height), resample=Image.Resampling.BICUBIC)
+    image = image.resize(
+        (resized_width, resized_height), resample=Image.Resampling.BICUBIC
+    )
 
     return image
+
 
 def process_vision_info(
     vision_infos: list,
     return_video_kwargs: bool = False,
-    factor: int = 1, 
-) -> tuple[list[Image.Image] | None, list[torch.Tensor | list[Image.Image]] | None, Optional[dict]]:
-
+    factor: int = 1,
+) -> tuple[
+    list[Image.Image] | None,
+    list[torch.Tensor | list[Image.Image]] | None,
+    Optional[dict],
+]:
     ## Read images or videos
     image_inputs = []
     video_inputs = []
     video_sample_fps_list = []
     for vision_info in vision_infos:
         if "image" in vision_info or "image_url" in vision_info:
-            image_inputs.append(fetch_image(vision_info, size_factor=28*factor))
+            image_inputs.append(fetch_image(vision_info, size_factor=28 * factor))
         elif "video" in vision_info:
-            video_input, video_sample_fps = fetch_video(vision_info, return_video_sample_fps=True)
+            video_input, video_sample_fps = fetch_video(
+                vision_info, return_video_sample_fps=True
+            )
             video_sample_fps_list.append(video_sample_fps)
             video_inputs.append(video_input)
         else:
@@ -654,5 +724,5 @@ def process_vision_info(
     if len(video_inputs) == 0:
         video_inputs = None
     if return_video_kwargs:
-        return image_inputs, video_inputs, {'fps': video_sample_fps_list}
+        return image_inputs, video_inputs, {"fps": video_sample_fps_list}
     return image_inputs, video_inputs
