@@ -2105,17 +2105,26 @@ def log_validation(
         ]
 
     if image_path:
-        # Load original image(s)
+        # Load original images
         original_images = [Image.open(p).convert("RGB") for p in image_path]
 
-        # Ensure both lists have the same length for grid (repeat last image if needed)
-        while len(original_images) < len(images):
-            original_images.append(original_images[-1])
+        # Create thumbnail for each original image (max size 1024, preserve aspect ratio)
+        thumbnails = []
+        for img in original_images:
+            thumb = img.copy()
+            thumb.thumbnail((1024, 1024))  # modifies in-place
+            thumbnails.append(thumb)
 
-        # Concatenate each generated image with its original
+        # Resize generated images to match the thumbnail size
+        resized_generated = []
+        for gen, thumb in zip(images, thumbnails):
+            gen_resized = gen.resize(thumb.size)
+            resized_generated.append(gen_resized)
+
+        # Concatenate side-by-side
         concatenated_images = [
-            make_image_grid([orig, gen], cols=2, rows=1)  # nrow=2 means side by side
-            for orig, gen in zip(original_images, images)
+            make_image_grid([orig, gen], cols=2, rows=1)
+            for orig, gen in zip(thumbnails, resized_generated)
         ]
     else:
         concatenated_images = images  # fallback, just generated images
