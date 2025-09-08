@@ -2,6 +2,7 @@ import base64
 import json
 import os
 import random
+from enum import Enum
 from fractions import Fraction
 from io import BytesIO
 from typing import Any, Callable, List, Optional
@@ -18,7 +19,12 @@ from torch.utils.data import Dataset
 from tqdm import tqdm
 from transformers import PreTrainedTokenizer
 
-from univa.utils.constant import GENERATE_TOKEN, SPACIAL_TOKEN
+from univa.utils.constant import (
+    CLEAN_SHORT_PROMPTS,
+    EMPTY_SHORT_PROMPTS,
+    GENERATE_TOKEN,
+    SPACIAL_TOKEN,
+)
 from univa.utils.get_mask import get_weight_mask
 from univa.utils.get_ocr import get_ocr_result
 from univa.utils.prompter import Prompter
@@ -47,6 +53,49 @@ def has_same_resolution(img1, img2):
     return img1.size == img2.size
 
 
+# ============================================================
+# Enum + helper functions for room removal dataset labeling
+# ------------------------------------------------------------
+# Instead of hardcoding "to_empty"/"to_furnished" in multiple
+# places, we define a central Enum (RemovalType) and a mapping
+# from path substrings → RemovalType. This ensures consistency,
+# makes the code easier to extend, and avoids string typos.
+# ============================================================
+
+
+class RemovalType(str, Enum):
+    """Types of room removal tasks."""
+
+    EMPTY = "empty"  # remove all furniture + clutter
+    CLEAN = "clean"  # remove clutter only, keep furniture
+
+
+# Central mapping: folder keywords → RemovalType
+REMOVAL_TYPE_RULES = {
+    "to_empty": RemovalType.EMPTY,
+    "to_furnished": RemovalType.CLEAN,
+}
+
+
+def detect_removal_type(image_root: str) -> RemovalType | None:
+    """
+    Detect the removal type for a dataset item based on its path.
+
+    Args:
+        image_root (str): Path string that contains task-specific keywords.
+
+    Returns:
+        RemovalType | None:
+            - RemovalType.EMPTY if path contains "to_empty"
+            - RemovalType.CLEAN if path contains "to_furnished"
+            - None if no keyword matches
+    """
+    for key, removal_type in REMOVAL_TYPE_RULES.items():
+        if key in image_root:
+            return removal_type
+    return None
+
+
 class Qwen2VLDataset(Dataset):
     def __init__(
         self,
@@ -70,6 +119,7 @@ class Qwen2VLDataset(Dataset):
         random_data: bool = False,
         maxnum_per_data: int = -1,
         notry: bool = False,
+        removal_prompt_switch_ratio=0.3,
     ):
         assert dataset_type == "qwen2vl" or dataset_type == "qwen2p5vl", (
             "dataset_type == 'qwen2vl' or dataset_type == 'qwen2p5vl'"
@@ -123,6 +173,9 @@ class Qwen2VLDataset(Dataset):
             f"tokenizer miss image end token `{self.image_end_token}`"
         )
 
+        # Use for removal dataset
+        self.removal_prompt_switch_ratio = removal_prompt_switch_ratio
+
     def _load_data(self, maxnum_per_data=-1):
         for dataset in self.datasets:
             image_root, json_file, need_weight = dataset.split(",")
@@ -135,6 +188,10 @@ class Qwen2VLDataset(Dataset):
                 data = random.sample(data, maxnum_per_data)
             dataset_data = []
             for line in tqdm(data):
+                # image_root might be: /uniworld_removal_dataset_v2.0.0/furnished_to_empty/neo_dataset
+                # determine romoval type by folder name (e.g. *_to_empty or *_to_furnished)
+                line["removal_type"] = detect_removal_type(image_root)
+
                 if "image" not in line:
                     line["image"] = []
                 # Ensure `image` is a list
@@ -234,15 +291,38 @@ class Qwen2VLDataset(Dataset):
         # Reformat the conversation to the format of prompter
         conversations = []
         prompt = ""
+
         for item in data["conversations"]:
             if item["from"] == "human":
                 role = self.prompter.user_role
-                prompt = item["value"]
+
+                # default: explicit prompt
+                chosen_prompt = item["value"].replace(" <image>", "")
+
+                # random replacement with short prompt
+                if (
+                    random.random() < self.removal_prompt_switch_ratio
+                ):  # e.g. 30% chance
+                    if data["removal_type"] == RemovalType.EMPTY:
+                        chosen_prompt = random.choice(EMPTY_SHORT_PROMPTS)
+                    elif data["removal_type"] == RemovalType.CLEAN:
+                        chosen_prompt = random.choice(CLEAN_SHORT_PROMPTS)
+                    else:
+                        # fallback: do nothing (keep original explicit prompt)
+                        pass
+
+                # update both prompt and conversations
+                conversations.append(
+                    {"from": role, "value": chosen_prompt + " <image>"}
+                )
+                prompt = chosen_prompt
+
             elif item["from"] == "gpt":
                 role = self.prompter.assistant_role
+                conversations.append({"from": role, "value": item["value"]})
             else:
                 raise ValueError(f"Unknown role: {item['from']}")
-            conversations.append({"from": role, "value": item["value"]})
+
         assert prompt != "", "prompt != ''"
         # The last turn instruction will be used for t5_embed
         prompt = prompt.replace("<image>", "").replace("\n", "")

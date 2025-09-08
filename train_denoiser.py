@@ -26,6 +26,7 @@ from diffusers.training_utils import (
     compute_loss_weighting_for_sd3,
     free_memory,
 )
+from diffusers.utils import make_image_grid
 from einops import rearrange
 from PIL import Image
 from torch.utils.data import DataLoader
@@ -1660,32 +1661,36 @@ def main(args: UnivaTrainingDenoiseConfig, attn_implementation="sdpa"):
                         )
 
                     if len(base_eval_prompts) > 0:
-                        for i, j, k in zip(
+                        for (
+                            base_eval_prompt,
+                            base_eval_image_path,
+                            base_phase_name,
+                        ) in zip(
                             base_eval_prompts, base_eval_image_paths, base_phase_names
                         ):
                             if args.model_config.only_use_t5:
                                 warpped_log_validation(
-                                    prompt=i,
-                                    image_path=j,
+                                    prompt=base_eval_prompt,
+                                    image_path=base_eval_image_path,
                                     text_encoders=[
                                         None,
                                         text_encoders[1],
                                     ],  # we do not need clip
-                                    phase_name=k.replace("vlm", "t5"),
+                                    phase_name=base_phase_name.replace("vlm", "t5"),
                                     only_use_t5=True,
                                     joint_ref_feature=False,
                                     joint_ref_feature_as_condition=False,
                                 )
                             else:
                                 warpped_log_validation(
-                                    prompt=i,
-                                    image_path=j,
+                                    prompt=base_eval_prompt,
+                                    image_path=base_eval_image_path,
                                     text_encoders=[None, text_encoders[1]]
                                     if args.training_config.drop_t5_rate < 1.0
                                     else None,  # we do not need clip
-                                    phase_name=("t5-" + k)
+                                    phase_name=("t5-" + base_phase_name)
                                     if args.training_config.drop_t5_rate < 1.0
-                                    else k,
+                                    else base_phase_name,
                                     only_use_t5=False,
                                     joint_ref_feature=False,
                                     joint_ref_feature_as_condition=False,
@@ -1706,32 +1711,36 @@ def main(args: UnivaTrainingDenoiseConfig, attn_implementation="sdpa"):
                             ref_phase_names = ["vae-" + i for i in base_phase_names]
 
                         if len(ref_eval_prompts) > 0:
-                            for i, j, k in zip(
+                            for (
+                                base_eval_prompt,
+                                base_eval_image_path,
+                                base_phase_name,
+                            ) in zip(
                                 ref_eval_prompts, ref_eval_image_paths, ref_phase_names
                             ):
                                 if args.model_config.only_use_t5:
                                     warpped_log_validation(
-                                        prompt=i,
-                                        image_path=j,
+                                        prompt=base_eval_prompt,
+                                        image_path=base_eval_image_path,
                                         text_encoders=[
                                             None,
                                             text_encoder_cls_two,
                                         ],  # we do not need clip
-                                        phase_name=k.replace("vlm", "t5"),
+                                        phase_name=base_phase_name.replace("vlm", "t5"),
                                         only_use_t5=True,
                                         joint_ref_feature=args.model_config.joint_ref_feature,
                                         joint_ref_feature_as_condition=args.model_config.joint_ref_feature_as_condition,
                                     )
                                 else:
                                     warpped_log_validation(
-                                        prompt=i,
-                                        image_path=j,
+                                        prompt=base_eval_prompt,
+                                        image_path=base_eval_image_path,
                                         text_encoders=[None, text_encoder_cls_two]
                                         if args.training_config.drop_t5_rate < 1.0
                                         else None,  # we do not need clip
-                                        phase_name=("t5-" + k)
+                                        phase_name=("t5-" + base_phase_name)
                                         if args.training_config.drop_t5_rate < 1.0
-                                        else k,
+                                        else base_phase_name,
                                         only_use_t5=False,
                                         joint_ref_feature=args.model_config.joint_ref_feature,
                                         joint_ref_feature_as_condition=args.model_config.joint_ref_feature_as_condition,
@@ -1756,11 +1765,11 @@ def main(args: UnivaTrainingDenoiseConfig, attn_implementation="sdpa"):
                 if args.training_config.optimizer.lower() == "prodigy":
                     d = optimizer.param_groups[0]["d"]
                     beta1, beta2 = optimizer.param_groups[0]["betas"]
-                    k = optimizer.param_groups[0]["k"]
+                    base_phase_name = optimizer.param_groups[0]["k"]
                     lr = max(group["lr"] for group in optimizer.param_groups)
                     d_lr = d * lr
-                    bias_correction = ((1 - beta2 ** (k + 1)) ** 0.5) / (
-                        1 - beta1 ** (k + 1)
+                    bias_correction = ((1 - beta2 ** (base_phase_name + 1)) ** 0.5) / (
+                        1 - beta1 ** (base_phase_name + 1)
                     )
                     d_lr_bias_corr = d_lr * bias_correction
                     prodigy_log = {"d*lr": d_lr, "d*lr*bias_corr": d_lr_bias_corr}
@@ -2095,6 +2104,22 @@ def log_validation(
             for _ in range(args.training_config.num_validation_images)
         ]
 
+    if image_path:
+        # Load original image(s)
+        original_images = [Image.open(p).convert("RGB") for p in image_path]
+
+        # Ensure both lists have the same length for grid (repeat last image if needed)
+        while len(original_images) < len(images):
+            original_images.append(original_images[-1])
+
+        # Concatenate each generated image with its original
+        concatenated_images = [
+            make_image_grid([orig, gen], cols=2, rows=1)  # nrow=2 means side by side
+            for orig, gen in zip(original_images, images)
+        ]
+    else:
+        concatenated_images = images  # fallback, just generated images
+
     # if accelerator.is_local_main_process:
     if accelerator.is_main_process:
         for tracker in accelerator.trackers:
@@ -2104,7 +2129,7 @@ def log_validation(
                     {
                         phase_name: [
                             wandb.Image(image, caption=f"{i}: {prompt}")
-                            for i, image in enumerate(images)
+                            for i, image in enumerate(concatenated_images)
                         ]
                     }
                 )
