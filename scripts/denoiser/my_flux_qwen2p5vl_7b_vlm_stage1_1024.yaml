@@ -1,9 +1,9 @@
 training_config:
-  wandb_project: "uniworld"
-  wandb_name: "flux_qwen2p5vl_7b_vlm_stage1_from_univa_v1_1024_adamW_1e-5"
+  wandb_project: "uniworld-1024-s1-explicit-short-v2.0.0"
+  wandb_name: "stage1_from_univa_v2-ckpt-4000_1024_adamW_1e-5"
   seed: 203
-  output_dir: ./checkpoints/flux_qwen2p5vl_7b_vlm_stage1_from_univa_v1_1024_adamW_1e-5
-  logging_dir: ./logs/flux_qwen2p5vl_7b_vlm_stage1_from_univa_v1_1024_adamW_1e-5
+  output_dir: ./checkpoints/"stage1_from_univa_v2-ckpt-4000_1024_adamW_1e-5"
+  logging_dir: ./logs/"stage1_from_univa_v2-ckpt-4000_1024_adamW_1e-5"
   max_train_steps: 500000
   optimizer: "adamw"
   learning_rate: 1e-5
@@ -30,19 +30,19 @@ training_config:
   ema_decay: 0.999
 
 model_config:
-  pretrained_lvlm_name_or_path: /workspace/UniWorld-V1/model_weight/UniWorld-V1
+  pretrained_lvlm_name_or_path: /workspace/UniWorld-V1/model_weight/uniworld-stage-2-1024-v2.0.0_ckpt-4000
   ema_pretrained_lvlm_name_or_path: null #/workspace/UniWorld-V1/model_weight/UniWorld-V1
   pretrained_denoiser_name_or_path: /workspace/UniWorld-V1/model_weight/FLUX.1-dev
   guidance_scale: 1.0
   only_tune_mlp2: true
   with_tune_mlp2: false
-  pretrained_mlp2_path: /workspace/UniWorld-V1/model_weight/UniWorld-V1/stage1/denoise_projector.bin
+  pretrained_mlp2_path: /workspace/UniWorld-V1/checkpoints/flux_qwen2p5vl_7b_vlm_stage1_from_univa_v1_1024_adamW_1e-5/checkpoint-1000/denoise_projector.bin
   only_tune_mlp3: false
   with_tune_mlp3: false
   pretrained_mlp3_path: null  
   only_tune_siglip_mlp: false
   with_tune_siglip_mlp: false
-  pretrained_siglip_mlp_path: null
+  pretrained_siglip_mlp_path: /workspace/UniWorld-V1/model_weight/uniworld-stage-2-1024-v2.0.0_ckpt-4000/siglip_projector.bin
   joint_ref_feature: false
   only_use_t5: false
   only_tune_image_branch: false
@@ -53,7 +53,7 @@ dataset_config:
   dataset_type: qwen2p5vl
   min_pixels: 1048576
   max_pixels: 1048576
-  data_txt: /workspace/UniWorld-V1/training_data/uniworld_removal_dataset/data.txt
+  data_txt: /workspace/UniWorld-V1/training_data/uniworld_removal_dataset_v2.0.0/data.txt
   batch_size: 4
   num_workers: 16
   height: 1024
