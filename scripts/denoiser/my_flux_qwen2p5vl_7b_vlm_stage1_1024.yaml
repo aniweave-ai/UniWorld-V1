@@ -67,9 +67,22 @@ dataset_config:
 
     - validation_it2i_prompt: "Remove table, office chair, woven chair, laptop, printer, stool, shelving unit, lamp, vase, clothing racks, clothes, hangers, orange chair, dressing mannequin, shoes, coffee table, blue chair, papers, boxes. <image>"
       validation_image_path: assets/removal_5.jpg
+
+    - validation_it2i_prompt: "Empty room. <image>"
+      validation_image_path: assets/removal_2.jpg
+
+    - validation_it2i_prompt: "Empty room. <image>"
+      validation_image_path: assets/removal_5.jpg
+
     # Clean
     - validation_it2i_prompt: "Remove red dumbbells, yellow jump rope, cardboard boxes, laptop, small potted plant, globe, red jars, electronics and cables on the TV console, pink fabric, white pet bed. <image>"
       validation_image_path: assets/removal_1.jpg
 
     - validation_it2i_prompt: "Remove a black bag, small items on the nightstand, a rolled-up rug, folded clothes, and a white heater unit. <image>"
+      validation_image_path: assets/removal_3.jpg
+      
+    - validation_it2i_prompt: "Clean room. <image>"
+      validation_image_path: assets/removal_1.jpg
+
+    - validation_it2i_prompt: "Clean room. <image>"
       validation_image_path: assets/removal_3.jpg
