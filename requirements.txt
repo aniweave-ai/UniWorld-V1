@@ -29,7 +29,7 @@ ninja
 wandb==0.19.8
 prodigyopt
 paddleocr==2.7.0.3
-paddlepaddle==2.5.2
+paddlepaddle
 omegaconf==2.3.0
 qwen-vl-utils
 starlette==0.40.0

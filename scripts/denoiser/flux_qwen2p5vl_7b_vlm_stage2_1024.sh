@@ -37,5 +37,5 @@ accelerate launch \
   --machine_rank ${RANK} \
   --num_machines ${WORLD_SIZE} \
   --num_processes ${NUM_PROCESSES} \
-  train_denoiser.py \
+  train_denoiser_ps3.py \
   scripts/denoiser/my_flux_qwen2p5vl_7b_vlm_stage2_1024.yaml

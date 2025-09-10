@@ -23,8 +23,7 @@ hf download black-forest-labs/FLUX.1-dev \
     --local-dir ${MODEL_WEIGHT_DIR}/FLUX.1-dev
 hf download google/siglip2-so400m-patch16-512 \
     --local-dir ${MODEL_WEIGHT_DIR}/siglip2-so400m-patch16-512
-hf download Qwen/Qwen2.5-VL-7B-Instruct \
-    --local-dir ${MODEL_WEIGHT_DIR}/Qwen2.5-VL-7B-Instruct
+
 
 # Download training dataset
 mkdir -p /workspace/UniWorld-V1/training_data

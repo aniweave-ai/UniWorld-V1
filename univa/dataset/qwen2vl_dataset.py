@@ -6,6 +6,7 @@ from enum import Enum
 from fractions import Fraction
 from io import BytesIO
 from typing import Any, Callable, List, Optional
+from ps3 import PS3VisionModel, PS3ImageProcessor
 
 import numpy as np
 import requests
@@ -17,7 +18,7 @@ from PIL import Image
 from qwen_vl_utils.vision_process import fetch_video, smart_resize, to_rgb
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from transformers import PreTrainedTokenizer
+from transformers import PreTrainedTokenizer, SiglipImageProcessor
 
 from univa.utils.constant import (
     CLEAN_SHORT_PROMPTS,
@@ -609,14 +610,24 @@ class Qwen2VLDataset(Dataset):
             pil_pixel_values.append(image_inputs[0])
 
             if siglip_processor is not None:
-                siglip_pixel_value = siglip_processor.preprocess(
-                    images=Image.open(image_path).convert("RGB")
-                    if isinstance(image_path, str)
-                    else image_path,
-                    do_resize=True,
-                    return_tensors="pt",
-                    do_convert_rgb=True,
-                ).pixel_values  # 1 c h w
+                # Google SIGLIP2
+                
+                if isinstance(siglip_processor, SiglipImageProcessor):                
+                    siglip_pixel_value = siglip_processor.preprocess(
+                        images=Image.open(image_path).convert("RGB")
+                        if isinstance(image_path, str)
+                        else image_path,
+                        do_resize=True,
+                        return_tensors="pt",
+                        do_convert_rgb=True,
+                    ).pixel_values  # 1 c h w
+                
+                # NVIDA-PS3-SIGLIP2
+                if isinstance(siglip_processor, PS3ImageProcessor):
+                    siglip_pixel_value = siglip_processor(
+                        images=Image.open(image_path),
+                    )["pixel_values"][0].unsqueeze(0).to(torch.bfloat16)  # 1 c h w
+                    
                 if drop_prompt:
                     siglip_pixel_values.append(torch.zeros_like(siglip_pixel_value))
                 else:
